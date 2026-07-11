@@ -65,16 +65,3 @@ uvx --from mkdocs-material mkdocs gh-deploy # 建置並部署到 GitHub Pages
     ├── index.md   # 首頁導讀
     └── ch1–ch9    # 九章內容
 ```
-
-## 延伸閱讀
-
-- Palantir — *A Day in the Life of a Forward Deployed Software Engineer*
-- The Pragmatic Engineer — *What are Forward Deployed Engineers, and why are they so in demand?*
-- Palantir — *Navigating Open-Ended Questions*（FDE 面試 decomposition 關的官方指南）
-- Model Context Protocol 官方文件 — https://modelcontextprotocol.io
-
-## 關於
-
-由 [katelin013](https://github.com/katelin013) 整理撰寫，與 Claude（Fable 5）協作產出（2026/07）。內容綜合了公開資料研究、真實職缺需求拆解、與十餘年跨產業（金融、物流、雲端、媒體）系統開發及兩年 AI 協作開發的實戰經驗。
-
-發現錯誤或想補充？歡迎開 [Issue](https://github.com/katelin013/fde-textbook/issues)。
