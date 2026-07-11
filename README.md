@@ -1,67 +1,60 @@
-# FDE 必備知識教科書
+# FDE 轉職學習筆記
 
-> Forward Deployed Engineer（FDE）必備知識的完整中文教學——從 LLM 原理到企業部署，9 章、比喻先行、面試導向。
+> 一個寫了十多年程式的工程師，想轉職成為 Forward Deployed Engineer（FDE），一邊學習、一邊整理的筆記。
 
-**線上閱讀：https://katelin013.github.io/fde-textbook/**
+## 為什麼有這份筆記
 
----
+FDE 是我正在努力的目標：嵌入客戶環境、從需求拆解到部署維運、端到端交付 AI 解決方案的工程師。
 
-## 為什麼有這本書
+準備轉職的過程中我發現，這個角色需要的知識散得很開——LLM 原理、RAG、Agent、評估方法、企業部署的眉角，各自在不同的文件和文章裡，成體系的中文整理又少。與其零碎地讀，我選擇把自己讀過、消化過、動手試過的東西整理成一份有順序的筆記：先讓自己複習用，如果剛好能幫到同樣在準備的人，那就更好了。
 
-FDE 被稱為 2026 年最熱門的工程職位：嵌入客戶環境、從需求拆解到上線維運、端到端交付 AI 解決方案的工程師——半工程師、半顧問、全責任者。這個角色由 Palantir 開創，如今從 OpenAI 到台灣的 AI 新創都在招募。
+先說在前面：我不是 AI 專家。內容以公開資料與我自己的實作經驗為主，難免有理解不到位的地方，歡迎開 [Issue](https://github.com/katelin013/fde-textbook/issues) 指正，我會很感激。
 
-但 FDE 需要的知識散落各處：LLM 原理在論文裡、RAG 實務在部落格裡、企業部署的眉角在踩過坑的人腦子裡，而且**成體系的中文教材幾乎不存在**。這本書把它們整理成一條可以循序學習的路徑。
+## 筆記涵蓋的九個主題
 
-## 這本書寫給誰
-
-- 有工程底子、想系統性補齊 AI 應用知識的後端／全端工程師
-- 準備 FDE、Solutions Engineer、AI Engineer 等客戶導向職位面試的人
-- 需要向企業客戶解釋 AI 系統「為什麼能用、為什麼可信」的技術顧問
-
-不需要機器學習背景——全書從零講起，白話與比喻優先，數學公式零出現。
-
-## 章節目錄
-
-| 章 | 主題 | 核心比喻 |
+| 章 | 主題 | 我用來幫助自己理解的比喻 |
 |---|---|---|
-| [Ch1](https://katelin013.github.io/fde-textbook/ch1-llm-basics/) | LLM 是怎麼運作的 | 超強的接龍機器：token、context window、成本與天生限制 |
-| [Ch2](https://katelin013.github.io/fde-textbook/ch2-prompt-engineering/) | Prompt Engineering | 把玄學變工程：prompt 是規格書，不是咒語 |
-| [Ch3](https://katelin013.github.io/fde-textbook/ch3-rag/) | RAG | 讓模型開卷考試：chunking、embedding、hybrid search、reranking 全鏈路 |
-| [Ch4](https://katelin013.github.io/fde-textbook/ch4-agents/) | Agent 與 Tool Use | 從回答問題到完成任務：做錯事的半徑控制 |
-| [Ch5](https://katelin013.github.io/fde-textbook/ch5-mcp/) | MCP | AI 界的 USB-C：用標準協定解掉 N×M 整合問題 |
-| [Ch6](https://katelin013.github.io/fde-textbook/ch6-evals/) | Evals | 怎麼證明 AI 系統真的有效：demo 與 production 的分界線 |
-| [Ch7](https://katelin013.github.io/fde-textbook/ch7-choosing-approach/) | 技術選型 | Prompting vs RAG vs Fine-tune：由便宜到貴的決策順序 |
-| [Ch8](https://katelin013.github.io/fde-textbook/ch8-security/) | 安全 | Prompt Injection 與縱深防禦：prompt 不是安全邊界 |
-| [Ch9](https://katelin013.github.io/fde-textbook/ch9-enterprise-deployment/) | 企業部署 | 從 demo 到 production：「模型做得到」與「組織敢不敢用」之間的全部工程 |
+| [Ch1](docs/ch1-llm-basics.md) | LLM 是怎麼運作的 | 超強的接龍機器：token、context window、成本與天生限制 |
+| [Ch2](docs/ch2-prompt-engineering.md) | Prompt Engineering | 把玄學變工程：prompt 是規格書，不是咒語 |
+| [Ch3](docs/ch3-rag.md) | RAG | 讓模型開卷考試：chunking、embedding、hybrid search、reranking |
+| [Ch4](docs/ch4-agents.md) | Agent 與 Tool Use | 從回答問題到完成任務：做錯事的半徑控制 |
+| [Ch5](docs/ch5-mcp.md) | MCP | AI 界的 USB-C：用標準協定解掉 N×M 整合問題 |
+| [Ch6](docs/ch6-evals.md) | Evals | 怎麼知道 AI 系統真的有效：demo 與 production 的分界線 |
+| [Ch7](docs/ch7-choosing-approach.md) | 技術選型 | Prompting vs RAG vs Fine-tune：由便宜到貴的決策順序 |
+| [Ch8](docs/ch8-security.md) | 安全 | Prompt Injection 與縱深防禦：prompt 不是安全邊界 |
+| [Ch9](docs/ch9-enterprise-deployment.md) | 企業部署 | 從 demo 到 production：「模型做得到」與「組織敢不敢用」之間的距離 |
 
-## 每章固定結構
+## 每章的結構
 
-1. **本章目標**——讀完你能做到什麼（可驗證的能力，不是「了解」）
-2. **主體教學**——比喻開場、白話講解、架構圖與程式範例
-3. **常見誤解**——實務與面試中最容易踩的坑，逐條拆解
-4. **自我檢測**——口頭作答題附摺疊參考答案，適合自測或互考
-5. **面試連結**——這章對應 FDE 面試的哪些考點
+這是我自己讀書時習慣的整理方式：
 
-## 貫穿全書的立場
+1. **本章目標**——讀完應該能做到什麼（盡量寫成可驗證的能力，不是「了解」）
+2. **主體筆記**——比喻開場、白話整理、架構圖與程式範例
+3. **常見誤解**——多半是我自己踩過、或差點就誤解的地方
+4. **自我檢測**——口頭作答題附參考答案，我拿來檢查自己有沒有真的懂
 
-- **工程對策思維**：LLM 的每個限制（幻覺、視窗、過期）都接一個工程解法——企業導入 AI 的瓶頸從來不是模型不夠聰明，而是周邊工程沒做齊
-- **Eval 驅動**：沒有評估體系的 AI 系統只是 demo；eval set 就是 AI 系統的測試套件
-- **安全即架構**：權限過濾做在檢索層、人審關卡做在動作層——靠 prompt 防守等於在門上貼「請勿闖入」的紙條
-- **企業現實優先**：SSO、RBAC、審計、變更管理不是附錄，是 FDE 工作的主體
+## 目前為止學到最重要的幾件事
 
-## 本地開發
+- **限制都有工程對策**：LLM 的每個限制（幻覺、視窗、知識過期）都有成熟的工程解法——難的不是模型，是周邊工程有沒有做齊
+- **沒有 eval 就只是 demo**：改動好不好不能靠肉眼看幾個例子，eval set 就是 AI 系統的測試套件
+- **prompt 不是安全邊界**：權限過濾要做在檢索層與工具層，靠 prompt 防守等於在門上貼「請勿闖入」的紙條
+- **企業在乎的是治理**：SSO、權限、審計、變更管理不是附錄——這正是 FDE 這個角色存在的原因
+
+## 在本地閱讀
+
+筆記用 MkDocs 整理，可以直接在 GitHub 讀 `docs/` 內的 markdown，或在本地起一個帶搜尋和目錄的閱讀介面：
 
 ```bash
 git clone https://github.com/katelin013/fde-textbook.git
 cd fde-textbook
-uvx --from mkdocs-material mkdocs serve     # 本地預覽 http://127.0.0.1:8000
-uvx --from mkdocs-material mkdocs gh-deploy # 建置並部署到 GitHub Pages
+uvx --from mkdocs-material mkdocs serve   # http://127.0.0.1:8000
 ```
 
 ```
 .
-├── mkdocs.yml     # 站台設定（MkDocs Material、繁中介面、全文搜尋）
+├── mkdocs.yml     # 站台設定
+├── scripts/       # 整理用小工具
 └── docs/
-    ├── index.md   # 首頁導讀
-    └── ch1–ch9    # 九章內容
+    ├── index.md   # 導讀
+    └── ch1–ch9    # 九章筆記
 ```
