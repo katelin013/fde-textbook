@@ -1,0 +1,58 @@
+site_name: FDE 必備知識教科書
+site_description: Forward Deployed Engineer 必備知識完整教學——LLM、RAG、Agent、MCP、Evals、安全與企業部署
+site_url: https://katelin013.github.io/fde-textbook/
+repo_url: https://github.com/katelin013/fde-textbook
+repo_name: katelin013/fde-textbook
+
+theme:
+  name: material
+  language: zh-TW
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: 切換深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: 切換淺色模式
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+
+nav:
+  - 首頁: index.md
+  - Ch1 LLM 是怎麼運作的: ch1-llm-basics.md
+  - Ch2 Prompt Engineering: ch2-prompt-engineering.md
+  - Ch3 RAG: ch3-rag.md
+  - Ch4 Agent 與 Tool Use: ch4-agents.md
+  - Ch5 MCP: ch5-mcp.md
+  - Ch6 Evals: ch6-evals.md
+  - Ch7 技術選型: ch7-choosing-approach.md
+  - Ch8 安全: ch8-security.md
+  - Ch9 企業部署: ch9-enterprise-deployment.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+plugins:
+  - search:
+      lang: zh
