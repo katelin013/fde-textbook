@@ -42,11 +42,16 @@ nav:
   - Ch7 技術選型: ch7-choosing-approach.md
   - Ch8 安全: ch8-security.md
   - Ch9 企業部署: ch9-enterprise-deployment.md
+  - Ch10 基礎設施複習: ch10-infra-basics.md
 
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight
   - tables
   - toc:
