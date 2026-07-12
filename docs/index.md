@@ -19,6 +19,7 @@ FDE 是嵌入客戶環境、從需求拆解到上線維運、端到端交付 AI 
 | [Ch7](ch7-choosing-approach.md) | 技術選型 | Prompting vs RAG vs Fine-tune：由便宜到貴的決策順序 |
 | [Ch8](ch8-security.md) | 安全 | Prompt Injection 與縱深防禦：prompt 不是安全邊界 |
 | [Ch9](ch9-enterprise-deployment.md) | 企業部署 | 從 demo 到 production：組織敢不敢用的工程 |
+| [Ch10](ch10-infra-basics.md) | 基礎設施複習 | Linux、Networking、K8s：把生鏽的維運知識擦亮成白板等級 |
 
 ## 每章結構
 
