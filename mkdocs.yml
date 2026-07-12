@@ -1,5 +1,5 @@
-site_name: FDE 必備知識教科書
-site_description: Forward Deployed Engineer 必備知識完整教學——LLM、RAG、Agent、MCP、Evals、安全與企業部署
+site_name: FDE 轉職學習筆記
+site_description: 一個想轉職 FDE 的工程師的學習筆記——LLM、RAG、Agent、MCP、Evals、安全與企業部署
 site_url: https://katelin013.github.io/fde-textbook/
 repo_url: https://github.com/katelin013/fde-textbook
 repo_name: katelin013/fde-textbook
