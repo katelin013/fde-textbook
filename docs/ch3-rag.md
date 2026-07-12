@@ -20,12 +20,17 @@ RAG 回答了企業的三大需求：知識**即時更新**（改文件就好，
 
 RAG 分兩條線：**建庫（離線，事先做）**與**查詢（線上，每次問答）**。
 
+```mermaid
+flowchart LR
+  subgraph 建庫線（離線・事先做）
+    A["文件"] --> B["解析清洗"] --> C["切塊 chunking"] --> D["向量化 embedding"] --> E[("向量庫＋metadata")]
+  end
 ```
-【建庫線】
-文件 → 解析清洗 → 切塊(chunking) → 向量化(embedding) → 存入向量庫(＋metadata)
 
-【查詢線】
-問題 → 向量化 → 檢索(向量＋關鍵字) → 重排(reranking) → 組裝 prompt → 生成回答(＋引用)
+```mermaid
+flowchart LR
+  Q["問題"] --> QE["向量化"] --> R["檢索：向量＋關鍵字"] --> RR["重排 reranking"] --> P["組裝 prompt"] --> G["生成回答＋引用"]
+  V[("向量庫")] -.-> R
 ```
 
 面試被要求「設計一個 RAG」，先畫這兩條線，再逐環節展開。以下逐環節講。
