@@ -24,12 +24,17 @@
 
 ## 5.2 架構：Host、Client、Server
 
-```
-┌─ Host（AI 應用本體，例：Claude Code、Claude Desktop）
-│   ├─ Client A ──(一對一連線)── MCP Server：公司 ERP
-│   ├─ Client B ──────────────── MCP Server：文件庫
-│   └─ Client C ──────────────── MCP Server：PostgreSQL
-└─ LLM（host 把各 server 的能力整理後提供給模型）
+```mermaid
+flowchart LR
+  subgraph Host["Host：AI 應用本體（例：Claude Code）"]
+    LLM["LLM"]
+    CA["Client A"]
+    CB["Client B"]
+    CC["Client C"]
+  end
+  CA ---|"一對一連線"| SA["MCP Server：公司 ERP"]
+  CB --- SB["MCP Server：文件庫"]
+  CC --- SC["MCP Server：PostgreSQL"]
 ```
 
 - **Host**：使用者面對的 AI 應用，總管一切
