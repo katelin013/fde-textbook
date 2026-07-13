@@ -5,7 +5,7 @@
 By the end of this chapter you'll be able to:<br>
 (1) Explain, in plain language, how an LLM works and what its built-in limitations are, to a customer;<br>
 (2) Read an API bill and know how to keep costs down;<br>
-(3) Answer the interview question, "What are the limitations of LLMs, and how do you deal with them?"<br>
+(3) Clearly explain what the built-in limitations of LLMs are, and the corresponding engineering countermeasures.<br>
 
 ---
 
@@ -88,7 +88,7 @@ When you're asked "What are the limitations of LLMs," answer with this structure
 | **Unstable output** | probabilistic generation | low temperature + Structured Output + validate-and-retry |
 | **Can't distinguish instructions from data** | it's all just text | a permission-layer defense (Chapter 8) |
 
-> The interview one-liner: "Every limitation of an LLM has a mature engineering countermeasure—so the bottleneck for enterprises adopting AI was never that the model isn't smart enough, but that the surrounding engineering isn't fully built out. This is exactly why FDEs exist."
+> In one line: "Every limitation of an LLM has a mature engineering countermeasure—so the bottleneck for enterprises adopting AI was never that the model isn't smart enough, but that the surrounding engineering isn't fully built out. This is exactly why FDEs exist."
 
 ---
 

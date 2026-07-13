@@ -22,7 +22,7 @@ The engineering that lies in between is the FDE's to-do list:
 5. **Quality**: Once it's live, how do you know it's still doing okay? (evals + online signals, Ch6)
 6. **Change management**: What process does changing a prompt have to go through? (version control + regression + review)
 
-> Interview soundbite: "A demo proves the model *can* do it; production has to solve whether the *organization dares* to use it — and everything in between is engineering and governance. That's exactly where the FDE adds value."
+> In one line: "A demo proves the model *can* do it; production has to solve whether the *organization dares* to use it — and everything in between is engineering and governance. That's exactly where the FDE adds value."
 
 ## 9.2 Hosted API vs. Private Deployment (A Must-Answer Consultant-Grade Question)
 
@@ -85,7 +85,7 @@ Enterprises have freeze periods, UAT, release windows, and rollback requirements
 
 1. **"A successful demo means we're about to go live."** — The demo is the starting line; the trio + reliability + change management make up the bulk of the timeline. Factor these in when you quote a schedule, or you'll be burying yourself.
 2. **"Sensitive data means we must self-host the model."** — Lead with private endpoints in the cloud; self-hosting is the last resort and must be costed in full.
-3. **"Just control permissions with the prompt."** — For the third time: filter at the retrieval layer. This is a red-line question in interviews, and getting it wrong is an instant out.
+3. **"Just control permissions with the prompt."** — For the third time: filter at the retrieval layer. This is a red line, and getting it wrong is an instant out.
 4. **"Monitoring an AI system just means checking whether the API is alive."** — You also have to monitor quality (eval trends, escalation-to-human rate). A system that's alive but whose answers have degraded is a far more insidious failure.
 
 ## Self-Check

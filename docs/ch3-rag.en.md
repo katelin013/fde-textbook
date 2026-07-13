@@ -2,7 +2,7 @@
 
 ## Chapter Goals
 
-By the end of this chapter you'll be able to: (1) draw and walk through the entire RAG pipeline on a whiteboard; (2) for each stage, answer "why this choice, and when would you swap it out"; (3) when facing "retrieval is off" or "the answer is wrong," diagnose it systematically; (4) clear the single most important technical hurdle in a Taiwanese FDE interview.
+By the end of this chapter you'll be able to: (1) draw and walk through the entire RAG pipeline on a whiteboard; (2) for each stage, answer "why this choice, and when would you swap it out"; (3) when facing "retrieval is off" or "the answer is wrong," diagnose it systematically; (4) master the single most important technical capability for Taiwanese FDE work.
 
 ---
 
@@ -33,7 +33,7 @@ flowchart LR
   V[("Vector store")] -.-> R
 ```
 
-When an interview asks you to "design a RAG system," draw these two tracks first, then expand stage by stage. Here we go through each stage in turn.
+When you need to "design a RAG system," draw these two tracks first, then expand stage by stage. Here we go through each stage in turn.
 
 ## 3.3 Document Processing: Unsexy, but It Sets the Ceiling
 
@@ -43,7 +43,7 @@ When an interview asks you to "design a RAG system," draw these two tracks first
 - **Cleaning**: headers and footers, tables of contents, repeated disclaimers—this noise pollutes retrieval.
 - **Metadata preservation**: source filename, section, date, version, **permission labels**—downstream filtering, citation, and access control all depend on it.
 
-> Wisdom from the field, FDE edition: before taking a project, look at the "actual state" of the client's documents before quoting a timeline. The client says "our documents are well organized," you open them up and find 20-year-old scans with handwritten notes—that's the difference between a three-week project and a three-month one. (Talk about this awareness in an interview and it immediately shows you understand the field.)
+> Wisdom from the field, FDE edition: before taking a project, look at the "actual state" of the client's documents before quoting a timeline. The client says "our documents are well organized," you open them up and find 20-year-old scans with handwritten notes—that's the difference between a three-week project and a three-month one.
 
 ## 3.4 Chunking: Cutting the Book into Cards
 
@@ -54,7 +54,7 @@ How do you cut? Two schools of thought:
 1. **Fixed length + overlap**: e.g., roughly 500–1000 tokens per chunk, with 10–20% overlap between adjacent chunks (to avoid a sentence being cut in half at the boundary). Simple, stable, and **always start with this as your baseline**.
 2. **Structural / semantic splitting**: split by heading, paragraph, or section. Works better when the document has good structure (manuals, regulations).
 
-The core tradeoff (an interview must-know—memorize this line): **small chunks → precise retrieval, but the context you pull back is fragmented; large chunks → complete context, but retrieval gets fuzzy and costs more.** There's no universal size—**decide it with evals** (Chapter 6).
+The core tradeoff: **small chunks → precise retrieval, but the context you pull back is fragmented; large chunks → complete context, but retrieval gets fuzzy and costs more.** There's no universal size—**decide it with evals** (Chapter 6).
 
 An advanced move: **parent-document**—retrieve with small chunks (for precision), then once you get a hit, hand the model the large passage the chunk belongs to (for completeness). You get the best of both ends; the cost is storage and complexity.
 
@@ -72,7 +72,7 @@ Key selection points:
 
 ## 3.6 Vector DB and ANN: Finding the Nearest Among Millions of Neighbors
 
-Once you have vectors, "retrieval" = "finding the top-k vectors nearest to the question vector among millions." Comparing them one by one is too slow, so we use an **ANN (Approximate Nearest Neighbor)** index—sacrificing a tiny bit of accuracy for a thousandfold speedup. The mainstream algorithm is **HNSW**; in an interview, this one line is enough: "a multi-layer graph index that trades space for speed, like coming off a highway layer by layer down to the back alleys to find an address."
+Once you have vectors, "retrieval" = "finding the top-k vectors nearest to the question vector among millions." Comparing them one by one is too slow, so we use an **ANN (Approximate Nearest Neighbor)** index—sacrificing a tiny bit of accuracy for a thousandfold speedup. The mainstream algorithm is **HNSW**; in one line: "a multi-layer graph index that trades space for speed, like coming off a highway layer by layer down to the back alleys to find an address."
 
 Selection (Taiwan practice):
 
@@ -82,7 +82,7 @@ Selection (Taiwan practice):
 | Dedicated stores like Qdrant / Milvus | Large vector volume (tens of millions or more), need advanced filtering and performance tuning |
 | Managed cloud (Vertex AI Search, etc.) | The client is all-in on that cloud and accepts a managed service |
 
-> Interview soundbite: "My default is pgvector—in an enterprise environment, every extra component adds another round of operations and security review. A dedicated vector store is an upgrade for when scale demands it, not an opening move." (This signals that you "understand the enterprise field.")
+> In one line: "My default is pgvector—in an enterprise environment, every extra component adds another round of operations and security review. A dedicated vector store is an upgrade for when scale demands it, not an opening move." (This signals that you "understand the enterprise field.")
 
 ## 3.7 Hybrid Search: Using Keywords to Cover the Vector's Blind Spots
 
@@ -108,7 +108,7 @@ Assemble the retrieved content into the prompt, along with three iron rules:
 
 Citation isn't decoration—it's the **cornerstone of enterprise trust** (users can verify), a **debugging clue** (when the answer's wrong, look at what it cited), and the **boundary of responsibility** (the AI saying "per document X" and "I think" are two different things).
 
-**A word about permissions again here (a security red line)**: documents a user isn't authorized to see must be **filtered out at the retrieval layer** (via metadata permission labels), not retrieved and then told to the model "don't mention this." The prompt is not a security boundary (detailed in Chapter 8). Proactively raising this point in an interview = an immediate plus.
+**A word about permissions again here (a security red line)**: documents a user isn't authorized to see must be **filtered out at the retrieval layer** (via metadata permission labels), not retrieved and then told to the model "don't mention this." The prompt is not a security boundary (detailed in Chapter 8).
 
 ## 3.10 Failure-Mode Diagnostic Table (Differential Diagnosis for RAG)
 
@@ -122,7 +122,7 @@ The system got the answer wrong—how do you investigate? First ask one question
 | Retrieved an outdated version | **Metadata problem** | Version field + retrieval filter for the latest version |
 | Retrieved content the user isn't authorized to see | **Permission hole (P0)** | Permission filtering at the retrieval layer, fix immediately |
 
-This table is the standard answer to the interview question "the client says RAG got an answer wrong, what do you do": **first split it into a retrieval problem versus a generation problem, then treat the specific cause**—and the prerequisite for telling these two apart is that you have evals (Chapter 6: retrieval hit rate and answer correctness must be measured separately).
+This table is the standard way to handle "the client says RAG got an answer wrong, what do you do": **first split it into a retrieval problem versus a generation problem, then treat the specific cause**—and the prerequisite for telling these two apart is that you have evals (Chapter 6: retrieval hit rate and answer correctness must be measured separately).
 
 ---
 

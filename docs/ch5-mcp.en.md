@@ -2,7 +2,7 @@
 
 ## Chapter Goals
 
-This is your headline weapon chapter (the Dcard JD explicitly lists hands-on MCP experience). By the end you'll be able to: (1) start from the N×M problem and clearly explain why MCP exists; (2) draw the full architecture on a whiteboard; (3) have three ready-to-go versions prepared — a 3-minute pitch, a 30-minute deep dive, and a customer-facing version; (4) package your own self-built server experience into interview evidence.
+MCP is one of this book's core topics. By the end you'll be able to: (1) start from the N×M problem and clearly explain why MCP exists; (2) draw the full architecture on a whiteboard; (3) have three ready-to-go versions prepared — a 3-minute pitch, a 30-minute deep dive, and a customer-facing version; (4) package your own self-built server experience into a clear technical case study.
 
 ---
 
@@ -51,7 +51,7 @@ A server is usually small (wrapping one system, a handful of tools), and that's 
 | **Resources** | Data the model can "read" | File contents, DB schema, config files |
 | **Prompts** | Pre-written prompt templates the user can pick and apply | A "generate weekly report" template |
 
-In practice tools are the star of the show (about 80% of servers are tools-centric), but for interviews you should be able to speak to all three.
+In practice tools are the star of the show (about 80% of servers are tools-centric), but you should be able to speak to all three.
 
 ## 5.4 Transport: How It Connects
 
@@ -60,13 +60,13 @@ In practice tools are the star of the show (about 80% of servers are tools-centr
 
 Rule of thumb for choosing: stdio for local personal use, HTTP for shared enterprise services.
 
-## 5.5 The Key Exam Question: How MCP Relates to Function Calling
+## 5.5 A Key Distinction: How MCP Relates to Function Calling
 
-The most common point of confusion. The model answer:
+The most common point of confusion. Here's how to frame it clearly:
 
 > "The two are **different layers**, not competitors. Function calling is a **model-layer mechanism** — how the model expresses 'I want to call a tool'; MCP is an **integration-layer protocol** — how tools get discovered, connected, and provided in a standardized way. An MCP server's tools are, in the end, still handed to the model through function calling. What MCP solves isn't 'how the model uses tools,' it's 'how the tool ecosystem avoids reinventing the wheel.'"
 
-A bonus line to extend it: "So MCP is a vendor-neutral open standard — and that's precisely why enterprises are willing to invest in wrapping an MCP server: that layer of investment doesn't get thrown away when you switch model vendors."
+To extend it further: "So MCP is a vendor-neutral open standard — and that's precisely why enterprises are willing to invest in wrapping an MCP server: that layer of investment doesn't get thrown away when you switch model vendors."
 
 ## 5.6 How Simple It Actually Is to Build a Server (Demystified)
 
@@ -85,20 +85,20 @@ def query_order(order_id: str) -> str:
 mcp.run()  # defaults to stdio
 ```
 
-The point isn't the amount of code (there's very little), it's the **design judgment** — and that's exactly what interviews want you to show:
+The point isn't the amount of code (there's very little), it's the **design judgment** — and that comes down to a few key questions:
 
 - How finely do you split the tools? (One all-powerful `run_sql` vs. three named queries — the latter is controllable, authorizable, and harder for the model to misuse)
 - Who enforces permissions? (Do it at the server layer; don't trust the model's self-restraint)
 - How do you return errors? (Return actionable messages that guide the model to fix its parameters)
 - How do you write the descriptions? (These are the usage instructions written for the model to read, and they determine whether the model picks the right tool)
 
-## 5.7 Your Three Versions (W4 Rehearsal Focus)
+## 5.7 Your Three Versions
 
 - **3-minute elevator version**: N×M problem → USB-C metaphor → "I've built N servers myself: which systems I connected, what repetitive-integration pain I solved" → one concrete result
 - **30-minute whiteboard version**: the 5.2 architecture diagram → pick one server you built and walk it end to end: why you built it, how you split the tools, permission and error design, the pitfalls you hit (e.g. stdio debugging, schema evolution)
 - **Customer-facing version** (for enterprise IT leaders): start from the "fear of lock-in" → open standard → "wrap one MCP layer, swap AI applications freely" → security Q&A (the server lives inside your environment, you control the permissions, everything is auditable end to end)
 
-**W4 assignment**: Draw the MCP servers you've built as a single architecture diagram (which systems they connect, which tools they expose) and save it into `interview/`. In an interview, this is your physical evidence.
+**Exercise**: Draw the MCP servers you've built as a single architecture diagram (which systems they connect, which tools they expose) — it's the most direct way to make your MCP experience concrete.
 
 ---
 
@@ -113,7 +113,7 @@ The point isn't the amount of code (there's very little), it's the **design judg
 
 1. Using the N×M problem and the USB-C metaphor, explain what MCP is in 3 minutes (timed, out loud).
 2. From memory, sketch the host/client/server architecture on a whiteboard and label the three capability types.
-3. "How does MCP relate to function calling?" — answer using the 5.5 model answer, without notes.
+3. "How does MCP relate to function calling?" — give a complete, well-structured answer using 5.5.
 4. Design question: a customer wants their AI to look up ERP orders — would you expose a single `run_sql` tool or named tools? Why?
 5. An enterprise IT leader asks, "Is this thing secure?" — what's the structure of your answer?
 

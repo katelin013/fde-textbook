@@ -1,6 +1,6 @@
 # Glossary Quick Reference
 
-A one-stop list of the AI terms every FDE needs — full English name, Chinese, and a one-line explanation. Grouped by topic and mapped to each chapter, so you can skim it quickly before an interview.
+A one-stop list of the AI terms every FDE needs — full English name, Chinese, and a one-line explanation. Grouped by topic and mapped to each chapter, so you can skim it quickly for reference.
 
 ## LLM Basics (Ch1)
 
@@ -129,6 +129,6 @@ The "core skill" of collaborating with AI has been climbing up levels of abstrac
 | **Spec-Driven Development**<br>規格驅動開發 (SDD, also called Spec Engineering) | 2025 | "What spec should I write so the agent can build to it?" | Instead of dictating instructions sentence by sentence, you first write a clear spec and hand it off to the agent to implement (GitHub Spec Kit and AWS Kiro are representative tools). |
 | **Loop Engineering**<br>循環工程 (also called Harness Engineering) | 2026 | "What system should I design so the agent finds work, finishes it, verifies it, and remembers it — without me sitting in the loop?" | Emerged in June 2026. The focus shifts from "writing prompts" to "designing the loop that drives the agent": the generation side reruns cheaply, and the real bottleneck is the verifier. |
 
-> **The key point for FDEs**: If an interview asks "will prompt engineering become obsolete," the right framing is — it hasn't been made obsolete, it's been **absorbed** into a higher-level skill. Being able to lay out this evolutionary line (prompt → context → spec → loop) and explain "why the bottleneck keeps moving up" shows that you're keeping pace and thinking clearly.
+> **The key point for FDEs**: On the question of whether "prompt engineering will become obsolete," the right framing is — it hasn't been made obsolete, it's been **absorbed** into a higher-level skill. Being able to lay out this evolutionary line (prompt → context → spec → loop) and explain "why the bottleneck keeps moving up" shows that you're keeping pace and thinking clearly.
 
 *Note: `spec engineer` and `sdd engineer` are actually the same thing (SDD = Spec-Driven Development), and the table above has merged them; `context engineering` is a crucial link that your original list missed, and it has been added back in.*

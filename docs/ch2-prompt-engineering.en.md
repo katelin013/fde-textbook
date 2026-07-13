@@ -2,7 +2,7 @@
 
 ## Chapter Goals
 
-By the end of this chapter you'll be able to:<br>(1) write stable prompts systematically instead of tuning them by gut feel;<br>(2) set up an engineering workflow for managing prompts (version control, testing, rollback);<br>(3) answer the interview question "once you've written a prompt, how do you know if it's any good?"
+By the end of this chapter you'll be able to:<br>(1) write stable prompts systematically instead of tuning them by gut feel;<br>(2) set up an engineering workflow for managing prompts (version control, testing, rollback);<br>(3) clearly explain how to tell whether a prompt is any good once you've written it.
 
 ---
 
@@ -100,7 +100,7 @@ Once you've written a prompt, how do you know if it's good? "Run a regression ag
 1. A client's classification prompt has unstable accuracy. What's your debugging order? (at least five steps)
 2. What is few-shot? How should you pick the examples?
 3. Write out the structured-output three-part approach, and explain why you still validate in code even when there's a native JSON mode.
-4. "Once a prompt is written, how do you know if it's good?"—answer at an interview level.
+4. "Once a prompt is written, how do you know if it's good?"—give a complete, well-organized answer.
 5. Why does a prompt need to "give an exit"? What does that have to do with hallucination?
 
 ## Key Points for the Answers

@@ -1,16 +1,16 @@
 # Ch10 Infrastructure Refresher: Linux, Networking, K8s
 
-> This is positioned as an **interview refresher**, not teaching from scratch — it polishes rusty ops knowledge back up to the "can explain it at a whiteboard" level. (Almost every FDE job description spells it out: Linux, Networking, Cloud-Native & Container.)
+> This is positioned as a **knowledge refresher**, not teaching from scratch — it polishes rusty ops knowledge back up to the "can explain it clearly" level. (Almost every FDE job description spells it out: Linux, Networking, Cloud-Native & Container.)
 
 ## Chapter Goals
 
-By the end you'll be able to: (1) walk through the whole "type a URL in the browser to the page showing up" flow at a whiteboard; (2) explain clearly what happens to a K8s Pod from `apply` to Running, and how to debug it when it breaks; (3) use basic tools in a customer environment to pin down "the service is unreachable / running slow."
+By the end you'll be able to: (1) walk through the whole "type a URL in the browser to the page showing up" flow end to end; (2) explain clearly what happens to a K8s Pod from `apply` to Running, and how to debug it when it breaks; (3) use basic tools in a customer environment to pin down "the service is unreachable / running slow."
 
 ---
 
-## 10.1 The Classic Question: From Typing a URL to Seeing the Page
+## 10.1 From Typing a URL to Seeing the Page
 
-When you get asked this in an interview, deliver it with an "outside-in, one sentence per layer" rhythm:
+Work through it with an "outside-in, one sentence per layer" rhythm:
 
 1. **DNS**: the browser asks "whose IP does this name map to" — first the local cache → OS/hosts → recursive resolver (ISP or 8.8.8.8) → root → TLD → authoritative server. The answer carries a TTL for caching.
 2. **TCP three-way handshake**: SYN → SYN-ACK → ACK, establishing the connection (being able to say who goes first is enough).
@@ -34,7 +34,7 @@ When you get asked this in an interview, deliver it with an "outside-in, one sen
 - **Container networking basics**: a container has its own network namespace; to expose it externally you need port mapping; containers connect to each other over the network (compose/K8s give them DNS names).
 - **Common pitfalls**: inside a container, `localhost` is not the host machine; baking secrets into an image (use environment variables / secret management instead).
 
-## 10.4 K8s: Turning Your Ops Experience into Interview Language
+## 10.4 K8s: Turning Your Ops Experience into Clear Explanations
 
 **Core objects, one-liner version**:
 - **Pod**: the smallest deployable unit (one or more containers that live and die together).
@@ -43,7 +43,7 @@ When you get asked this in an interview, deliver it with an "outside-in, one sen
 - **Ingress**: the L7 routing entry point (forwards to different Services by domain/path).
 - **ConfigMap/Secret**: mounting configuration and secrets.
 
-**A must-know flow: what happens after `kubectl apply`**
+**A key flow: what happens after `kubectl apply`**
 The API Server receives it and stores it in etcd → the Scheduler picks a node → that node's kubelet pulls the image and starts the container → only after the readiness probe passes does it enter the Service's rotation.
 
 **The Pod-broke debugging playbook (memorize it — you'll use it daily in the field)**:
@@ -57,7 +57,7 @@ kubectl logs <pod> [--previous] # check the container logs (--previous shows the
 - `Pending` → not enough resources or a scheduling constraint; describe to see the Events
 - `OOMKilled` → the memory limit is too low, or it's genuinely leaking
 
-**liveness vs readiness** (commonly asked): liveness fails → restart the container; readiness fails → just temporarily stop sending it traffic. The consequence of mixing them up: repeatedly restarting a service that's "still warming up."
+**liveness vs readiness**: liveness fails → restart the container; readiness fails → just temporarily stop sending it traffic. The consequence of mixing them up: repeatedly restarting a service that's "still warming up."
 
 ## 10.5 The Linux Field Toolbox (When the Customer Environment Has No GUI)
 
@@ -71,20 +71,20 @@ kubectl logs <pod> [--previous] # check the container logs (--previous shows the
 | Find the error in a file | `grep -rn "ERROR" logs/` | Pair it with `less` — don't flood the screen with cat |
 | Permission problems | `ls -l`, `id` | The first reaction to Permission denied |
 
-**How to say it in an interview**: you don't need to memorize every flag — saying "here's my debugging order" already wins half the battle: "first resources (top/df), then networking (ss/curl), then logs (journalctl), narrowing the scope by the evidence."
+**How to explain it clearly**: you don't need to memorize every flag — saying "here's my debugging order" already wins half the battle: "first resources (top/df), then networking (ss/curl), then logs (journalctl), narrowing the scope by the evidence."
 
 ---
 
 ## Common Misconceptions
 
-1. **"A K8s interview means memorizing every object"** — no. Getting fluent on the four (Pod/Deployment/Service/Ingress) plus the debugging playbook beats memorizing 20 terms.
-2. **"liveness and readiness are about the same"** — the consequences are completely different (restart vs remove from traffic); mixing them up will make the interviewer's eyes light up (the bad kind).
+1. **"Knowing K8s means memorizing every object"** — no. Getting fluent on the four (Pod/Deployment/Service/Ingress) plus the debugging playbook beats memorizing 20 terms.
+2. **"liveness and readiness are about the same"** — the consequences are completely different (restart vs remove from traffic); mixing them up causes real incidents in production.
 3. **"Unreachable means it's a network problem"** — "network problem" isn't an answer, it's where the question starts: DNS? routing? firewall? port? certificate? the service itself? Talk it through down the chain.
 4. **"A container = a lightweight VM"** — the isolation levels are different; this line will come across as unprofessional in front of a security-sensitive customer.
 
 ## Self-Check
 
-1. Walk through "typing a URL to the page appearing" at a whiteboard, one sentence per layer (within 3 minutes).
+1. Walk through "typing a URL to the page appearing" end to end, one sentence per layer (within 3 minutes).
 2. A customer reports "we can't reach your service" — narrate your debugging chain and the command you use at each step.
 3. From `kubectl apply` to the Pod being Running, what happens in between?
 4. What do `CrashLoopBackOff` and `ImagePullBackOff` each mean, and how do you debug each?

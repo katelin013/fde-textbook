@@ -2,7 +2,7 @@
 
 ## Chapter Goals
 
-By the end of this chapter you'll be able to: (1) explain the full mechanics of function calling (who decides, who executes); (2) draw the agent loop on a whiteboard; (3) design guardrails and answer "what happens when an agent does the wrong thing?"; (4) turn your two years of hands-on agent experience into theory, so it becomes interview language.
+By the end of this chapter you'll be able to: (1) explain the full mechanics of function calling (who decides, who executes); (2) draw the agent loop on a whiteboard; (3) design guardrails and answer "what happens when an agent does the wrong thing?"; (4) turn your two years of hands-on agent experience into theory, so you can articulate it clearly.
 
 ---
 
@@ -13,13 +13,13 @@ By the end of this chapter you'll be able to: (1) explain the full mechanics of 
 
 Analogy: a chatbot is a **directory assistance line** (ask a question, get an answer); an agent is **sending an assistant off to run errands** ("arrange my business trip for next week"—and it goes and checks flights, compares prices, books tickets, and hands you an itinerary).
 
-This dividing line shifts where the engineering effort goes (an interview one-liner): **the engineering focus for a chatbot is "answering well"; the engineering focus for an agent is "controlling the blast radius of doing the wrong thing."** It's fine when your assistant says the wrong thing; it's a problem when your assistant charges the wrong card.
+This dividing line shifts where the engineering effort goes (in one line): **the engineering focus for a chatbot is "answering well"; the engineering focus for an agent is "controlling the blast radius of doing the wrong thing."** It's fine when your assistant says the wrong thing; it's a problem when your assistant charges the wrong card.
 
 ## 4.2 Function Calling: The Truth About How a Model "Takes Action"
 
 The foundational mechanism of an agent is **function calling (tool use)**. The key insight: **from start to finish, the model never executes anything—it merely "says" what it wants to call; the one doing the executing is always your program.**
 
-The full flow has five steps (you should be able to draw it from memory in an interview):
+The full flow has five steps (you should be able to draw it from memory):
 
 ```
 1. You give the model: the task + a tool list (each tool: name, description of what it does, parameter schema)
@@ -72,7 +72,7 @@ Splitting a task across multiple specialized agents (planner/executor/reviewer) 
 - **Benefits**: separation of concerns (each agent's prompt is simple, its tool set small), parallelism, and **independent review** (the reviewer isn't contaminated by the executor's line of thinking—your multi-model cross-review is exactly this principle)
 - **Costs**: coordination complexity, errors propagating and amplifying at handoffs, multiplied cost, and harder debugging
 
-**Interview stance (memorize this line)**: "Get a single agent working well first. Splitting needs a clear reason—my practical experience is that 'review independence' is the most defensible reason to split, which is why I do multi-model cross-review." Turn your hands-on experience directly into an argument.
+**Core stance**: "Get a single agent working well first. Splitting needs a clear reason—my practical experience is that 'review independence' is the most defensible reason to split, which is why I do multi-model cross-review." Turn your hands-on experience directly into an argument.
 
 ## 4.6 Guardrails: Controlling the Blast Radius of Doing the Wrong Thing
 

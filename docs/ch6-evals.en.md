@@ -2,11 +2,11 @@
 
 ## Chapter Goals
 
-This is the **make-or-break chapter** for interviews—"How do you know your system actually works?" Answer this badly and you're out. After reading it, you'll be able to: (1) explain the four-layer eval architecture; (2) actually build a golden set and an LLM-as-judge (in W3 you'll do this once for Trilo); (3) frame evals as "the test suite for an AI system."
+This is a **make-or-break chapter**—the core question is "How do you know your system actually works?" After reading it, you'll be able to: (1) explain the four-layer eval architecture; (2) actually build a golden set and an LLM-as-judge (in W3 you'll do this once for Trilo); (3) frame evals as "the test suite for an AI system."
 
 ---
 
-## 6.1 Why Evals Are the Make-or-Break Question
+## 6.1 Why Evals Are the Dividing Line Between Demo and Production
 
 Traditional software: fixed input → fixed output → just write test assertions.
 LLM systems: outputs are probabilistic, and "correct" often has no single standard (Is the summary good? Is the tone right?)—**traditional asserts break down**.
@@ -18,7 +18,7 @@ So a brutal dividing line appears:
 
 What enterprise customers pay for is the latter. OpenAI's FDE team even bakes this into their process—"**build the eval first, verify it hits the bar, and only then deliver**" (see the three-phase model in `research/fde-role-research.md`)—the eval isn't post-delivery QA, it's a pre-delivery contract.
 
-One line to say to an interviewer who's on your wavelength: **"The eval set is the test suite for an AI system. Changing a prompt without an eval is like changing production code with no tests."**
+In one line: **"The eval set is the test suite for an AI system. Changing a prompt without an eval is like changing production code with no tests."**
 
 ## 6.2 The Golden Set: The Foundation of Everything
 
@@ -29,7 +29,7 @@ A **golden set** = a batch of "input + expected result" test data. How to build 
 3. **Define "expected"**: for cases with a standard answer, write the standard answer; for those without, write a **scoring rubric**
 4. **Start small**: 50–100 items is enough to get to work, then keep back-filling with bad cases you discover in production—**every production error should become an eval item** (same discipline as bug regression tests)
 
-## 6.3 The Four-Layer Evaluation Architecture (The Standard Answer—Memorize It)
+## 6.3 The Four-Layer Evaluation Architecture
 
 Cheap to expensive, fast to slow—four layers that complement each other:
 
@@ -72,10 +72,10 @@ flowchart TD
   D -->|"regressed"| FIX["fix, then re-run"] --> REG
 ```
 
-This diagram answers three common interview questions:
+This diagram answers three common questions:
 
 - "How do you safely swap models / change a prompt?" → Run the regression, look at the scores, and especially look at **the per-category breakdown** (total score up but the red-line category down = don't ship)
-- "The customer says the model got dumber—how do you investigate?" → First run the eval to localize it: did the score really drop? Which category dropped? (connects to question bank #10: drift investigation)
+- "The customer says the model got dumber—how do you investigate?" → First run the eval to localize it: did the score really drop? Which category dropped? (drift investigation)
 - "What accuracy do we need before we can ship?" → Turn it back on the business: what's the cost of an error? Low-risk scenarios are usable at 90%, high-risk scenarios need 99% + a human-review gate. **The threshold is a business decision, the measurement is an engineering responsibility.**
 
 ## 6.5 RAG Evals Must Be Split in Two (Echoing Chapter 3)
@@ -99,7 +99,7 @@ If you only measure the final answer, you'll never know whether to fix retrieval
 
 ## Self-Check
 
-1. The interviewer asks: "How do you know your AI system actually works?"—give a complete answer using the four-layer architecture (in under 3 minutes).
+1. "How do you know your AI system actually works?"—give a complete answer using the four-layer architecture (in under 3 minutes).
 2. Design a golden set for an "insurance policy clause Q&A RAG": give an example each for source, layering, and red-line cases.
 3. Write an LLM-as-judge rubric (in item-by-item check format), and explain how to calibrate the judge.
 4. Why must RAG evals be split into retrieval and generation?

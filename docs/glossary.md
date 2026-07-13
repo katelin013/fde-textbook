@@ -1,6 +1,6 @@
 # 名詞速查表
 
-FDE 必備 AI 術語一覽——英文全名、中文、一句話說明。依主題分組，對應各章內容，面試前可快速掃過。
+FDE 必備 AI 術語一覽——英文全名、中文、一句話說明。依主題分組，對應各章內容，可快速掃過查閱。
 
 ## LLM 基礎（Ch1）
 
@@ -129,6 +129,6 @@ FDE 必備 AI 術語一覽——英文全名、中文、一句話說明。依主
 | **Spec-Driven Development**<br>規格驅動開發（SDD，又稱 Spec Engineering） | 2025 | 「我該寫出什麼規格，讓 agent 照著蓋？」 | 不再逐句下指令，而是先寫清楚規格書，交給 agent 實作（GitHub Spec Kit、AWS Kiro 是代表工具）。 |
 | **Loop Engineering**<br>循環工程（又稱 Harness Engineering） | 2026 | 「我該設計什麼系統，讓 agent 自己找事、做完、驗證、記住——不用我在迴圈裡？」 | 2026 年 6 月出現。重點從「寫 prompt」變成「設計驅動 agent 的迴圈」：生成端便宜地重複跑，真正的瓶頸在 verifier（驗證器）。 |
 
-> **給 FDE 的重點**：面試若被問「prompt engineering 會不會被淘汰」，正確框架是——它沒被淘汰，是被**包進**更上層的技能裡。能講出這條演進線（prompt → context → spec → loop）、並說明「瓶頸為何一路往上移」，就是在展現你跟得上、也想得清楚。
+> **給 FDE 的重點**：談到「prompt engineering 會不會被淘汰」，正確框架是——它沒被淘汰，是被**包進**更上層的技能裡。能講出這條演進線（prompt → context → spec → loop）、並說明「瓶頸為何一路往上移」，就是在展現你跟得上、也想得清楚。
 
 *註：`spec engineer` 與 `sdd engineer` 其實是同一件事（SDD ＝ Spec-Driven Development），上表已合併；`context engineering` 是你原本清單漏掉、但很關鍵的一環，已補上。*

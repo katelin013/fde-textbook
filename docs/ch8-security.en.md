@@ -14,7 +14,7 @@ The world of LLMs has no such line: **everything that enters the context is text
 
 **Prompt injection** exploits exactly this: it disguises an "instruction" as "data" and slips it in.
 
-> This is why "the prompt is not a security boundary" (the signature line of this chapter — say it in an interview and it reads as a professional signal): when you write "never leak X" in the system prompt, it's essentially just a piece of text placed earlier, and the attacker's text placed later still has every chance to override it. **Defending against prompt injection with a prompt is like taping a "Do Not Enter" note on a door.**
+> This is why "the prompt is not a security boundary" (the signature line of this chapter): when you write "never leak X" in the system prompt, it's essentially just a piece of text placed earlier, and the attacker's text placed later still has every chance to override it. **Defending against prompt injection with a prompt is like taping a "Do Not Enter" note on a door.**
 
 ## 8.2 Two Forms
 
@@ -72,7 +72,7 @@ Layers 1–5 map one-to-one onto existing concepts in bank internal controls:
 | Output validation and anomaly interception | Transaction monitoring, anomalous-pattern detection |
 | Audit logging | Audit trail, retention periods |
 
-> The killer framing for interviews/client conversations: "AI security isn't a new discipline for finance — **least privilege, separation of duties, audit trails: you've done these for decades, and it's exactly what I did at Taishin.** My job is to apply the same governance logic to agents: an agent is a permission-controlled, action-logged digital maker whose large actions require a checker." This line lets a financial client's security and audit departments instantly get it and relax — and that's precisely the biggest psychological barrier to AI adoption for Taiwanese enterprises.
+> The killer framing for client conversations: "AI security isn't a new discipline for finance — **least privilege, separation of duties, audit trails: you've done these for decades, and it's exactly what I did at Taishin.** My job is to apply the same governance logic to agents: an agent is a permission-controlled, action-logged digital maker whose large actions require a checker." This line lets a financial client's security and audit departments instantly get it and relax — and that's precisely the biggest psychological barrier to AI adoption for Taiwanese enterprises.
 
 ## 8.5 Adjacent Topics: Other Paths to Data Leakage
 

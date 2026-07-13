@@ -27,12 +27,11 @@ An FDE is an engineer embedded in the customer's environment who delivers AI sol
 
 1. **Goals** — what you'll be able to do after reading
 2. **Main notes** — metaphor-led openings, plain-language explanations, diagrams and code examples
-3. **Common misconceptions** — the traps most easily hit in practice and in interviews
+3. **Common misconceptions** — the traps most easily hit in practice
 4. **Self-check** — with reference answers (expand the collapsible block to check)
-5. **Interview links** — which FDE interview topics this chapter maps to
 
 ## Suggested reading order
 
 - **First read**: Ch1 → Ch2 → Ch3 → Ch6 (build the "LLM–prompt–RAG–evaluation" backbone first), then Ch4/Ch5 (agents and integration), and finally Ch7/Ch8/Ch9 (decisions, security, enterprise).
-- **Before an interview**: go straight to each chapter's "Common misconceptions" and "Self-check".
+- **For a quick review**: go straight to each chapter's "Common misconceptions" and "Self-check".
 - **When your ops basics are rusty** (Linux / networking / K8s): flip to Ch10 anytime — it's self-contained.

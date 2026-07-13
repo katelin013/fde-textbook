@@ -2,7 +2,7 @@
 
 ## Chapter Goals
 
-By the end you'll be able to: (1) look at any requirement and quickly judge which approach fits; (2) explain to a client why "we're not using the most expensive option"; (3) nail the interview decision question "when do you fine-tune, when do you use RAG, when do you stick with pure prompting?"
+By the end you'll be able to: (1) look at any requirement and quickly judge which approach fits; (2) explain to a client why "we're not using the most expensive option"; (3) clearly explain when to fine-tune, when to use RAG, and when to stick with pure prompting.
 
 ---
 
@@ -24,7 +24,7 @@ The reason isn't just saving money—it's **iteration speed and maintainability*
 - Updating RAG knowledge = updating the document store, without touching the model
 - Every fine-tune adjustment means re-preparing data, training, evaluating, and deploying all over again—iteration measured in "weeks"
 
-> Interview one-liner: "**Fine-tune teaches the model *how* to say things; RAG gives the model *what* to say.** What enterprises want is usually the latter, and they need to be able to cite sources—so my default path is prompt → RAG, and fine-tune is the last resort I only reach for when there's a clear reason."
+> In one line: "**Fine-tune teaches the model *how* to say things; RAG gives the model *what* to say.** What enterprises want is usually the latter, and they need to be able to cite sources—so my default path is prompt → RAG, and fine-tune is the last resort I only reach for when there's a clear reason."
 
 ## 7.3 Breaking Down the Decision Factors One by One
 
@@ -54,7 +54,7 @@ The reason isn't just saving money—it's **iteration speed and maintainability*
 
 So here's the standard line for clients: "Fine-tune isn't a one-time purchase, it's raising a training pipeline. Unless there's a clear and ongoing reason, use prompt + RAG first to get 80% of the way there, and save the budget for evals and integration."
 
-## 7.5 Three Real-World Scenarios (For Interview Practice)
+## 7.5 Three Real-World Scenarios
 
 **Scenario one: A law firm wants AI to search past case precedents and internal memos.**
 → RAG. Knowledge-heavy, frequently updated, and citations are a must. Fine-tune is completely the wrong remedy.
