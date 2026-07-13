@@ -23,7 +23,6 @@ theme:
         icon: material/weather-sunny
         name: 切換淺色模式
   features:
-    - navigation.instant
     - navigation.tracking
     - navigation.top
     - navigation.footer
@@ -61,4 +60,33 @@ markdown_extensions:
 
 plugins:
   - search:
-      lang: zh
+      lang:
+        - zh
+        - en
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: zh
+          default: true
+          name: 中文
+          build: true
+        - locale: en
+          name: English
+          build: true
+          site_name: "FDE Career-Switch Study Notes"
+          nav_translations:
+            首頁: Home
+            Ch1 LLM 是怎麼運作的: "Ch1 How LLMs Work"
+            Ch2 Prompt Engineering: "Ch2 Prompt Engineering"
+            Ch3 RAG: "Ch3 RAG"
+            Ch4 Agent 與 Tool Use: "Ch4 Agents & Tool Use"
+            Ch5 MCP: "Ch5 MCP"
+            Ch6 Evals: "Ch6 Evals"
+            Ch7 技術選型: "Ch7 Choosing an Approach"
+            Ch8 安全: "Ch8 Security"
+            Ch9 企業部署: "Ch9 Enterprise Deployment"
+            Ch10 基礎設施複習: "Ch10 Infrastructure Refresher"
+            名詞速查表: "Glossary"
