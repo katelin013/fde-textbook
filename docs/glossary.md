@@ -86,3 +86,24 @@ FDE 必備 AI 術語一覽——英文全名、中文、一句話說明。依主
 | **Batch API** | 批次 API | 把不急的工作批次送出、非即時處理，通常半價。 |
 | **SLA**（Service Level Agreement） | 服務等級協議 | 供應商對可用度／延遲等的承諾指標。 |
 | **FDE**（Forward Deployed Engineer） | 前進部署工程師 | 進到客戶現場、把 AI 產品實際落地整合的工程師角色。 |
+
+---
+
+## AI CLI 工具跨工具對照
+
+三大 AI 編碼 CLI：**Claude Code**（Anthropic）、**Gemini CLI**（Google）、**Codex CLI**（OpenAI）。同一個功能在三個工具常有不同名稱／檔名，下表對照，並附一句用途。
+
+| 概念（用途） | Claude Code | Gemini CLI | Codex CLI |
+|---|---|---|---|
+| **專案指令／記憶檔**<br>告訴 AI 專案規則、慣例、架構，每次對話都會讀 | `CLAUDE.md` | `GEMINI.md` | `AGENTS.md` |
+| **設定檔**<br>權限、預設模型、環境變數等組態 | `.claude/settings.json` | `.gemini/settings.json` | `~/.codex/config.toml` |
+| **自訂斜線指令**<br>把常用 prompt 存成 `/指令` 一鍵重用 | 斜線指令<br>`.claude/commands/*.md` | 自訂指令<br>`.gemini/commands/*.toml` | 自訂 prompt<br>`~/.codex/prompts/*.md` |
+| **Skills 技能**<br>附教學檔的工作流，AI 依情境自動套用 | Agent Skills（`SKILL.md`，自動觸發） | 由 Extensions 提供 | Skills（`~/.codex/skills/…/SKILL.md`） |
+| **Subagents 子代理**<br>開分身、以獨立情境跑子任務 | Subagents（`.claude/agents/*.md`） | 原生尚無 | 原生尚無（可搭 Agents SDK） |
+| **Plugins／Extensions 外掛**<br>把技能、指令、MCP 打包成可安裝、可版控的單元 | Plugins（打包 skills／agents／commands／hooks／MCP） | Extensions（`gemini-extension.json`） | 無官方外掛系統 |
+| **Marketplace 市集**<br>讓外掛可被搜尋、安裝、更新的來源 | 有（`/plugin marketplace add …`） | 有（`gemini extensions install …`） | 無官方市集 |
+| **MCP 伺服器**<br>用統一協定讓 AI 連接外部工具與資料源 | 支援 | 支援 | 支援 |
+
+### 關於「rules.md／規則檔」
+
+這三個 CLI **沒有**叫 `rules.md` 的統一檔案。「規則」這個概念，在各 CLI 就是上表的**專案指令檔**——`CLAUDE.md`、`GEMINI.md`、`AGENTS.md`。其中 **`AGENTS.md` 正逐漸成為跨工具的開放標準**：Codex CLI 原生讀它，Gemini CLI 也能在 `settings.json`（`context.fileName`）設定改讀 `AGENTS.md`。至於 `.cursor/rules`、`.windsurfrules` 這類「rules」檔，是 Cursor／Windsurf 等**編輯器型**工具的用法，不屬於這三個 CLI。
