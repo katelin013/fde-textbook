@@ -1,2 +1,5 @@
 site/
 .cache/
+
+# 本地 mkdocs 預覽用 venv
+.venv/
