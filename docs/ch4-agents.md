@@ -2,7 +2,7 @@
 
 ## 本章目標
 
-讀完本章你能：(1) 講清楚 function calling 的完整機制（誰決定、誰執行）；(2) 白板畫出 agent loop；(3) 設計 guardrails 並回答「agent 做錯事怎麼辦」；(4) 把你兩年的 agent 實戰經驗理論化，變成能清楚說明的工程論述。
+讀完本章你能：<br>(1) 講清楚 function calling 的完整機制（誰決定、誰執行）；<br>(2) 白板畫出 agent loop；<br>(3) 設計 guardrails 並回答「agent 做錯事怎麼辦」；
 
 ---
 
