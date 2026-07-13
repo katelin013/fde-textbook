@@ -1,0 +1,1215 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="一個想轉職 FDE 的工程師的學習筆記——LLM、RAG、Agent、MCP、Evals、安全與企業部署">
+      
+      
+      
+        <link rel="canonical" href="https://katelin013.github.io/fde-textbook/en/ch9-enterprise-deployment/">
+      
+      
+        <link rel="prev" href="../ch8-security/">
+      
+      
+        <link rel="next" href="../ch10-infra-basics/">
+      
+      
+        
+          <link rel="alternate" href="../../ch9-enterprise-deployment/" hreflang="zh">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ch9 Enterprise Deployment - FDE Career-Switch Study Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ch9-enterprise-deployment-from-demo-to-production" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-header__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FDE Career-Switch Study Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ch9 Enterprise Deployment
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換淺色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換淺色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../ch9-enterprise-deployment/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-nav__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    FDE Career-Switch Study Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch1-llm-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch1 How LLMs Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch2-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch2 Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch3-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch3 RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch4-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch4 Agents & Tool Use
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch5-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch5 MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch6-evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch6 Evals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch7-choosing-approach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch7 Choosing an Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch8-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch8 Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch9 Enterprise Deployment
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch9 Enterprise Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#91-the-gulf-between-demo-and-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 The Gulf Between Demo and Production
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-hosted-api-vs-private-deployment-a-must-answer-consultant-grade-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Hosted API vs. Private Deployment (A Must-Answer Consultant-Grade Question)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-the-enterprise-integration-trio-sso-rbac-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 The Enterprise Integration Trio: SSO, RBAC, Audit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 The Enterprise Integration Trio: SSO, RBAC, Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sso-single-sign-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO (Single Sign-On)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rbac-role-based-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC (Role-Based Access Control)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit (Audit Trail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-reliability-engineering-sre-fundamentals-for-ai-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Reliability Engineering: SRE Fundamentals for AI Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-change-management-the-enterprise-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Change Management: The Enterprise Cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#96-a-quick-guide-to-the-taiwan-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 A Quick Guide to the Taiwan Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Misconceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-points-for-reference-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points for Reference Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-infra-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch10 Infrastructure Refresher
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#91-the-gulf-between-demo-and-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 The Gulf Between Demo and Production
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-hosted-api-vs-private-deployment-a-must-answer-consultant-grade-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Hosted API vs. Private Deployment (A Must-Answer Consultant-Grade Question)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-the-enterprise-integration-trio-sso-rbac-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 The Enterprise Integration Trio: SSO, RBAC, Audit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 The Enterprise Integration Trio: SSO, RBAC, Audit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sso-single-sign-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO (Single Sign-On)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rbac-role-based-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC (Role-Based Access Control)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit (Audit Trail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-reliability-engineering-sre-fundamentals-for-ai-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Reliability Engineering: SRE Fundamentals for AI Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-change-management-the-enterprise-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Change Management: The Enterprise Cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#96-a-quick-guide-to-the-taiwan-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 A Quick Guide to the Taiwan Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Misconceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-points-for-reference-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points for Reference Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ch9-enterprise-deployment-from-demo-to-production">Ch9 Enterprise Deployment: From Demo to Production<a class="headerlink" href="#ch9-enterprise-deployment-from-demo-to-production" title="Permanent link">&para;</a></h1>
+<h2 id="chapter-goals">Chapter Goals<a class="headerlink" href="#chapter-goals" title="Permanent link">&para;</a></h2>
+<p>By the end of this chapter you'll be able to: (1) clearly articulate exactly what engineering separates a demo from production; (2) give a consultant-grade comparison of "hosted API vs. private deployment"; (3) explain the SSO/RBAC/audit trio; (4) walk confidently into the compliance context of Taiwanese enterprises (finance, manufacturing). This chapter is the dividing line between an FDE and an ordinary AI engineer.</p>
+<hr />
+<h2 id="91-the-gulf-between-demo-and-production">9.1 The Gulf Between Demo and Production<a class="headerlink" href="#91-the-gulf-between-demo-and-production" title="Permanent link">&para;</a></h2>
+<p>Friday afternoon, you give the client a demo. The results dazzle, and the CEO signs off on the spot. Then what?</p>
+<p>The world of the demo: one user, clean sample data, your laptop, and if something breaks you just try again.
+The world of production: three thousand employees, twenty years of dirty data, the client's internal network, and if something breaks it makes the news.</p>
+<p>The engineering that lies in between is the FDE's to-do list:</p>
+<ol>
+<li><strong>Identity</strong>: How do three thousand people log in? (SSO)</li>
+<li><strong>Permissions</strong>: Can the intern see what the sales rep can see? (RBAC + filtering at the retrieval layer)</li>
+<li><strong>Audit</strong>: When the regulator comes knocking, can you reconstruct "who asked what and when, and what the AI answered"?</li>
+<li><strong>Reliability</strong>: What happens when the API goes down? Retries, degradation, monitoring, alerting.</li>
+<li><strong>Quality</strong>: Once it's live, how do you know it's still doing okay? (evals + online signals, Ch6)</li>
+<li><strong>Change management</strong>: What process does changing a prompt have to go through? (version control + regression + review)</li>
+</ol>
+<blockquote>
+<p>In one line: "A demo proves the model <em>can</em> do it; production has to solve whether the <em>organization dares</em> to use it — and everything in between is engineering and governance. That's exactly where the FDE adds value."</p>
+</blockquote>
+<h2 id="92-hosted-api-vs-private-deployment-a-must-answer-consultant-grade-question">9.2 Hosted API vs. Private Deployment (A Must-Answer Consultant-Grade Question)<a class="headerlink" href="#92-hosted-api-vs-private-deployment-a-must-answer-consultant-grade-question" title="Permanent link">&para;</a></h2>
+<p>The client asks: "Our data is sensitive — shouldn't we host the model ourselves?" Answer with a four-quadrant framing:</p>
+<table>
+<thead>
+<tr>
+<th>Quadrant</th>
+<th>Hosted API (OpenAI/Anthropic, etc.)</th>
+<th>Self-hosted open-source model (Llama, etc.)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Capability</strong></td>
+<td>Frontier models, continuously upgraded for free</td>
+<td>Open source is catching up; narrow tasks can be patched with fine-tuning</td>
+</tr>
+<tr>
+<td><strong>Security/Compliance</strong></td>
+<td>Data leaves the corporate network (protected by enterprise terms)</td>
+<td>Data never leaves the internal network</td>
+</tr>
+<tr>
+<td><strong>Cost</strong></td>
+<td>Pay-as-you-go, zero upfront infrastructure</td>
+<td>GPU infrastructure + an operations team; only pays off at high volume</td>
+</tr>
+<tr>
+<td><strong>Operations</strong></td>
+<td>None (they run it)</td>
+<td>All on you: deployment, scaling, updates, security patches</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The crucial middle option (the sweet spot for Taiwanese enterprises — always mention it)</strong>: <strong>private endpoints in the cloud</strong> — model services on Azure OpenAI or GCP Vertex AI. You get frontier-model capability + data that stays inside the enterprise's own cloud tenant + compliance with most regulatory requirements, all without carrying your own GPUs. <strong>Most "we need to self-host" requests pivot the moment they hear this option.</strong></p>
+<p>Be honest with the client about the hidden costs of self-hosting: it's not just buying GPUs — it's raising an entire model-operations team (inference optimization, version management, security updates), and even then your model capability lags a generation behind the frontier. "Go live on a private endpoint first to validate the value, and only evaluate self-hosting if there's a genuine reason" is the responsible path.</p>
+<h2 id="93-the-enterprise-integration-trio-sso-rbac-audit">9.3 The Enterprise Integration Trio: SSO, RBAC, Audit<a class="headerlink" href="#93-the-enterprise-integration-trio-sso-rbac-audit" title="Permanent link">&para;</a></h2>
+<h3 id="sso-single-sign-on">SSO (Single Sign-On)<a class="headerlink" href="#sso-single-sign-on" title="Permanent link">&para;</a></h3>
+<p>Employees log into every system with their company account, backed by the <strong>SAML</strong> or <strong>OIDC</strong> protocol (OIDC is the mainstream for new systems). In plain terms: your AI application doesn't manage passwords itself — it "trusts the pass issued by the company's identity hub (Okta, Azure AD)." What the FDE needs to know: wiring up the OIDC flow and feeding the identity and group information carried in that pass into the application.</p>
+<h3 id="rbac-role-based-access-control">RBAC (Role-Based Access Control)<a class="headerlink" href="#rbac-role-based-access-control" title="Permanent link">&para;</a></h3>
+<p>Once identity is in, the next question is "what is this person allowed to see." What's special about AI systems (important): <strong>permissions have to sink all the way down to the retrieval layer</strong> — when someone in the sales department asks a question, the retrieval scope is limited to sales-department documents only (as Ch3/Ch8 covered: enforce this with metadata filtering, not with the prompt). Mapping from SSO groups to document permission labels is the single easiest place to get enterprise RAG wrong.</p>
+<h3 id="audit-audit-trail">Audit (Audit Trail)<a class="headerlink" href="#audit-audit-trail" title="Permanent link">&para;</a></h3>
+<p>Who, when, what they asked, what the system retrieved, what the AI answered, and whether a human reviewed it — everything leaves a trace. This isn't nice-to-have: in finance it's a hard compliance requirement, and it's the only way to prove your innocence after something goes wrong. (The logs themselves contain sensitive data, so masking and access control must match how you treat personal data.)</p>
+<h2 id="94-reliability-engineering-sre-fundamentals-for-ai-systems">9.4 Reliability Engineering: SRE Fundamentals for AI Systems<a class="headerlink" href="#94-reliability-engineering-sre-fundamentals-for-ai-systems" title="Permanent link">&para;</a></h2>
+<p>An external LLM API is the "least reliable dependency" in your architecture. Treat it the way you'd treat any fragile external dependency:</p>
+<ul>
+<li><strong>Retries</strong>: exponential backoff + jitter (this is coding question C2); distinguish retryable (429/timeout) from non-retryable (400).</li>
+<li><strong>Degradation</strong>: primary model down → backup model / cached answer / a graceful "can't answer right now" failure — <strong>never let an AI outage become a business outage.</strong></li>
+<li><strong>Rate limiting and quotas</strong>: protect yourself (cost) and protect the upstream (429).</li>
+<li><strong>The four golden signals of monitoring</strong>: latency (TTFT/total duration), traffic, error rate, saturation (token quota usage) — plus the AI-specific ones: eval-score trends, hallucination-report rate, and escalation-to-human rate.</li>
+</ul>
+<h2 id="95-change-management-the-enterprise-cadence">9.5 Change Management: The Enterprise Cadence<a class="headerlink" href="#95-change-management-the-enterprise-cadence" title="Permanent link">&para;</a></h2>
+<p>Enterprises have freeze periods, UAT, release windows, and rollback requirements. Your AI system has to play along:</p>
+<ul>
+<li>Version your prompts/models so any change can be rolled back (Ch2).</li>
+<li>A change only passes review if it comes with an eval regression report (Ch6) — "how the score shifted across 500 test cases for this change" is your UAT evidence.</li>
+<li>Canary release: roll a new prompt out to 5% of traffic first.</li>
+</ul>
+<blockquote>
+<p>"Change anything anytime" is a virtue at a startup and a risk at an enterprise. Repackage "rapid iteration" as "controlled change where every iteration comes with regression evidence," and the enterprise will actually let you move fast.</p>
+</blockquote>
+<h2 id="96-a-quick-guide-to-the-taiwan-context">9.6 A Quick Guide to the Taiwan Context<a class="headerlink" href="#96-a-quick-guide-to-the-taiwan-context" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Finance</strong>: Regulated by the FSC. Data localization, dedicated rules for outsourced cloud services, and hard audit-trail requirements — your Taishin Bank experience speaks directly to this.</li>
+<li><strong>Personal Data Protection Act</strong>: Notification and purpose limitation when personal data enters an AI system; log masking.</li>
+<li><strong>Manufacturing</strong>: The secrets are process parameters and yield data (trade-secret grade), often with requirements for on-prem or "nothing leaves the plant"; deployment in network-isolated environments (AIFT's JD is talking about exactly this).</li>
+<li>The shared mindset: they're not resisting AI, they're afraid of losing control. Your answer is always a governance framework (permissions/audit/human review), never "just trust the model."</li>
+</ul>
+<hr />
+<h2 id="common-misconceptions">Common Misconceptions<a class="headerlink" href="#common-misconceptions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>"A successful demo means we're about to go live."</strong> — The demo is the starting line; the trio + reliability + change management make up the bulk of the timeline. Factor these in when you quote a schedule, or you'll be burying yourself.</li>
+<li><strong>"Sensitive data means we must self-host the model."</strong> — Lead with private endpoints in the cloud; self-hosting is the last resort and must be costed in full.</li>
+<li><strong>"Just control permissions with the prompt."</strong> — For the third time: filter at the retrieval layer. This is a red line, and getting it wrong is an instant out.</li>
+<li><strong>"Monitoring an AI system just means checking whether the API is alive."</strong> — You also have to monitor quality (eval trends, escalation-to-human rate). A system that's alive but whose answers have degraded is a far more insidious failure.</li>
+</ol>
+<h2 id="self-check">Self-Check<a class="headerlink" href="#self-check" title="Permanent link">&para;</a></h2>
+<ol>
+<li>After the demo, the client asks "how long until the whole company can go live?" — list the demo-to-production engineering checklist (six items).</li>
+<li>"Our data is really sensitive — shouldn't we host the model ourselves?" — answer at consultant grade with the four quadrants + the middle option.</li>
+<li>Explain the SSO/RBAC/audit trio in plain terms, and point out what's special about AI systems when it comes to RBAC.</li>
+<li>Design the reliability of an AI system: the key points of retries, degradation, and monitoring.</li>
+<li>A financial client's audit department asks "can the AI's decisions be audited?" — your answer (drawing on your Taishin experience).</li>
+</ol>
+<h2 id="key-points-for-reference-answers">Key Points for Reference Answers<a class="headerlink" href="#key-points-for-reference-answers" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>1. See the six items in 9.1.
+2. See 9.2; remember to be honest about the full cost of self-hosting and the &quot;validate on a private endpoint first&quot; path.
+3. See 9.3; the special point = permissions sinking down to the retrieval layer.
+4. See 9.4; the core line: &quot;don&#39;t let an AI outage become a business outage.&quot;
+5. Full traceability (input/retrieval/output/review) + human-review checkpoint design + segregation of duties modeled on internal controls; &quot;I built an audit system at Taishin — same logic.&quot;
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../ch8-security/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Ch8 Security">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Ch8 Security
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ch10-infra-basics/" class="md-footer__link md-footer__link--next" aria-label="Next: Ch10 Infrastructure Refresher">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Ch10 Infrastructure Refresher
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

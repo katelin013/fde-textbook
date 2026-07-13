@@ -1,0 +1,1271 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="一個想轉職 FDE 的工程師的學習筆記——LLM、RAG、Agent、MCP、Evals、安全與企業部署">
+      
+      
+      
+        <link rel="canonical" href="https://katelin013.github.io/fde-textbook/ch3-rag/">
+      
+      
+        <link rel="prev" href="../ch2-prompt-engineering/">
+      
+      
+        <link rel="next" href="../ch4-agents/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+          <link rel="alternate" href="../en/ch3-rag/" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ch3 RAG - FDE 轉職學習筆記</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ch3-rag" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="FDE 轉職學習筆記" class="md-header__button md-logo" aria-label="FDE 轉職學習筆記" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FDE 轉職學習筆記
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ch3 RAG
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換淺色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換淺色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../en/ch3-rag/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/katelin013/fde-textbook" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="FDE 轉職學習筆記" class="md-nav__button md-logo" aria-label="FDE 轉職學習筆記" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    FDE 轉職學習筆記
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/katelin013/fde-textbook" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首頁
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch1-llm-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch1 LLM 是怎麼運作的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch2-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch2 Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch3 RAG
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch3 RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本章目標
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 為什麼需要 RAG：閉卷考不過，就開卷
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 全鏈路總覽
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 文件處理：不性感，但決定上限
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Chunking：把書切成卡片
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Embedding：把語意變座標
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-vector-db-ann" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Vector DB 與 ANN：在百萬鄰居中找最近的
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Hybrid Search：向量的死角用關鍵字補
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#38-reranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Reranking：粗篩之後精選
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 生成與引用：最後一哩的紀律
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#310-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 失敗模式診斷表（RAG 的鑑別診斷）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常見誤解
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自我檢測
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        參考答案要點
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch4-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch4 Agent 與 Tool Use
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch5-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch5 MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch6-evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch6 Evals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch7-choosing-approach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch7 技術選型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch8-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch8 安全
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch9-enterprise-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch9 企業部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-infra-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch10 基礎設施複習
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    名詞速查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本章目標
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 為什麼需要 RAG：閉卷考不過，就開卷
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 全鏈路總覽
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 文件處理：不性感，但決定上限
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Chunking：把書切成卡片
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Embedding：把語意變座標
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-vector-db-ann" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Vector DB 與 ANN：在百萬鄰居中找最近的
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Hybrid Search：向量的死角用關鍵字補
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#38-reranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Reranking：粗篩之後精選
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 生成與引用：最後一哩的紀律
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#310-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 失敗模式診斷表（RAG 的鑑別診斷）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常見誤解
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自我檢測
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        參考答案要點
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ch3-rag">Ch3 RAG：讓模型開卷考試<a class="headerlink" href="#ch3-rag" title="Permanent link">&para;</a></h1>
+<h2 id="_1">本章目標<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>讀完本章你能：<br>(1) 白板畫出並講解 RAG 全鏈路；<br>(2) 對每個環節回答「為什麼這樣選、什麼情況會換」；<br>(3) 面對「檢索不準」「答錯了」能系統性診斷；<br>(4) 掌握台灣 FDE 現場最核心的技術能力。</p>
+<hr />
+<h2 id="31-rag">3.1 為什麼需要 RAG：閉卷考不過，就開卷<a class="headerlink" href="#31-rag" title="Permanent link">&para;</a></h2>
+<p>第一章講過：模型沒有你公司的資料、知識有截止日、也無法引用出處。怎麼讓它回答「我們公司的請假規則」？</p>
+<p>三個選項：<br>(a) 重新訓練模型（貴到不現實）；<br>(b) 把全部文件塞進 prompt（塞不下、太貴、中段失焦）；<br>(c) <strong>每次只把「跟這個問題相關的幾段」找出來塞給它</strong>——這就是 RAG（Retrieval-Augmented Generation，檢索增強生成）。</p>
+<p>比喻：<strong>閉卷考試改開卷</strong>。模型還是那個模型，但我們允許它「考試時翻參考書」——而我們的工程工作，是幫它把書整理好、建索引、翻到對的那一頁。</p>
+<p>RAG 回答了企業的三大需求：知識<strong>即時更新</strong>（改文件就好，不用動模型）、<strong>可引用出處</strong>（信任的基礎）、<strong>可控權限</strong>（誰能看什麼，在檢索層決定）。</p>
+<h2 id="32">3.2 全鏈路總覽<a class="headerlink" href="#32" title="Permanent link">&para;</a></h2>
+<p>RAG 分兩條線：<strong>建庫（離線，事先做）</strong>與<strong>查詢（線上，每次問答）</strong>。</p>
+<pre class="mermaid"><code>flowchart LR
+  subgraph S1["建庫線（離線・事先做）"]
+    A["文件"] --&gt; B["解析清洗"] --&gt; C["切塊 chunking"] --&gt; D["向量化 embedding"] --&gt; E[("向量庫＋metadata")]
+  end</code></pre>
+<pre class="mermaid"><code>flowchart LR
+  Q["問題"] --&gt; QE["向量化"] --&gt; R["檢索：向量＋關鍵字"] --&gt; RR["重排 reranking"] --&gt; P["組裝 prompt"] --&gt; G["生成回答＋引用"]
+  V[("向量庫")] -.-&gt; R</code></pre>
+<p>「設計一個 RAG」，先畫這兩條線，再逐環節展開。以下逐環節講。</p>
+<h2 id="33">3.3 文件處理：不性感，但決定上限<a class="headerlink" href="#33" title="Permanent link">&para;</a></h2>
+<p><strong>Garbage in, garbage out。</strong> 實務上 RAG 專案一半以上的工夫花在這裡：</p>
+<ul>
+<li><strong>格式解析</strong>：PDF 的表格、雙欄排版、掃描檔（要 OCR）、圖片內文字——每一種都是坑。解析錯，後面全白搭。</li>
+<li><strong>清洗</strong>：頁首頁尾、目錄、重複的免責聲明——這些雜訊會污染檢索。</li>
+<li><strong>Metadata 保留</strong>：來源檔名、章節、日期、版本、<strong>權限標籤</strong>——後面過濾、引用、權控全靠它。</li>
+</ul>
+<blockquote>
+<p>FDE 現場智慧：接案先看客戶文件的「真實樣貌」再報時程。客戶說「我們文件很齊全」，打開一看是 20 年的掃描件加手寫註記——這決定專案是三週還是三個月。</p>
+</blockquote>
+<h2 id="34-chunking">3.4 Chunking：把書切成卡片<a class="headerlink" href="#34-chunking" title="Permanent link">&para;</a></h2>
+<p>文件太長，不能整份檢索——要切成<strong>塊（chunk）</strong>，檢索的單位是塊。</p>
+<p>怎麼切？兩派：</p>
+<ol>
+<li><strong>固定長度＋重疊</strong>：例如每塊約 500–1000 token、相鄰塊重疊 10–20%（避免一句話被腰斬在邊界上）。簡單、穩定、<strong>永遠先用這個當基準</strong>。</li>
+<li><strong>結構／語意切分</strong>：按標題、段落、章節切。文件結構好（手冊、法規）時效果更佳。</li>
+</ol>
+<p>核心取捨：<strong>塊小 → 檢索精準，但撈回來的上下文碎；塊大 → 上下文完整，但檢索變糊、又貴。</strong> 沒有萬用尺寸——<strong>用 eval 定</strong>（第六章）。</p>
+<p>進階招：<strong>parent-document</strong>——用小塊做檢索（求準），命中後把它所屬的大段落給模型（求全）。兩頭的好處都拿到，代價是儲存與複雜度。</p>
+<h2 id="35-embedding">3.5 Embedding：把語意變座標<a class="headerlink" href="#35-embedding" title="Permanent link">&para;</a></h2>
+<p><strong>Embedding 模型</strong>把文字轉成一個高維向量（幾百到幾千個數字）。神奇之處：<strong>語意相近的文字，向量距離近</strong>。「請假規定」和「休假辦法」字面不同，但在向量空間裡是鄰居。</p>
+<p>把它想成<strong>語意地圖</strong>：每段文字被釘在地圖上的一個座標，找相關內容＝找地圖上的鄰居。</p>
+<p>選型要點：</p>
+<ul>
+<li><strong>語言支援</strong>：中文場景必須選多語或中文強的 embedding 模型——這在台灣是真實踩坑點</li>
+<li><strong>同一系統，查詢與文件必須用同一個 embedding 模型</strong>（不同模型的座標系不相容）</li>
+<li><strong>換 embedding 模型＝全庫重算</strong>——選型要慎重，遷移要排程</li>
+</ul>
+<h2 id="36-vector-db-ann">3.6 Vector DB 與 ANN：在百萬鄰居中找最近的<a class="headerlink" href="#36-vector-db-ann" title="Permanent link">&para;</a></h2>
+<p>有了向量，「檢索」＝「在幾百萬個向量中找出跟問題向量最近的 top-k」。逐一比對太慢，所以用 <strong>ANN（Approximate Nearest Neighbor，近似最近鄰）</strong>索引——犧牲一點點精確，換取千倍速度。主流演算法叫 <strong>HNSW</strong>，一句話總結：「用空間換速度的多層圖索引，像從高速公路逐層下到巷弄找地址」。</p>
+<p>選型（台灣實務）：</p>
+<table>
+<thead>
+<tr>
+<th>選項</th>
+<th>何時用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>pgvector</strong>（PostgreSQL 擴充）</td>
+<td><strong>預設首選</strong>：客戶已有 Postgres，少一個元件、少一套維運、權限沿用 DB 既有機制</td>
+</tr>
+<tr>
+<td>Qdrant / Milvus 等專用庫</td>
+<td>向量量級大（千萬以上）、需要進階過濾與效能調校</td>
+</tr>
+<tr>
+<td>雲託管（Vertex AI Search 等）</td>
+<td>客戶全家桶在該雲上、接受託管</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>一句話總結：「我的預設是 pgvector——企業環境每多一個元件就多一套維運與資安審查。專用向量庫是規模需求出現後的升級，不是起手式。」（這是「懂企業現場」的訊號。）</p>
+</blockquote>
+<h2 id="37-hybrid-search">3.7 Hybrid Search：向量的死角用關鍵字補<a class="headerlink" href="#37-hybrid-search" title="Permanent link">&para;</a></h2>
+<p>純向量檢索有個致命死角：<strong>精確詞</strong>。型號「TX-4090-B」、人名、法條編號、錯誤代碼——語意相似度對這些幫助有限，反而是三十年前就有的<strong>關鍵字檢索（BM25）</strong>最擅長。</p>
+<p>所以企業級 RAG 幾乎必上 <strong>hybrid search</strong>：向量（管語意）＋BM25（管精確詞）各撈一份，合併排序。使用者問「TX-4090-B 的保固」，關鍵字保證型號命中，向量保證「保固/維修/售後」的語意展開。</p>
+<h2 id="38-reranking">3.8 Reranking：粗篩之後精選<a class="headerlink" href="#38-reranking" title="Permanent link">&para;</a></h2>
+<p>檢索求快，難免撈回一些不太相關的。<strong>Reranking（重排）</strong>：第一階段快速撈 top 30–50（粗篩），再用一個更精細的 reranker 模型逐一比對「這段跟問題到底多相關」，精選出 top 3–5 給模型。</p>
+<p>比喻：<strong>招募流程</strong>——履歷關鍵字篩選（檢索）撈 50 人，逐一面試（rerank）選 5 人。你不會讓 50 個人都進最終面（貴），也不敢只靠關鍵字就發 offer（不準）。</p>
+<p>「檢索品質不夠」時，rerank 是第一張要考慮的牌——比換 embedding 模型便宜得多。</p>
+<h2 id="39">3.9 生成與引用：最後一哩的紀律<a class="headerlink" href="#39" title="Permanent link">&para;</a></h2>
+<p>檢索到的內容組進 prompt，配上鐵律三條：</p>
+<ol>
+<li><strong>只根據提供的內容回答</strong>——不要用你自己的知識補</li>
+<li><strong>標注出處</strong>——每個論點註明來自哪份文件哪一段</li>
+<li><strong>沒有就說沒有</strong>——內容裡找不到答案，明說，禁止推測</li>
+</ol>
+<p>引用（citation）不是裝飾——它是<strong>企業信任的基石</strong>（使用者能查證）、<strong>除錯的線索</strong>（答錯時看它引了什麼）、<strong>責任的邊界</strong>（AI 說「依據文件 X」跟「我覺得」是兩回事）。</p>
+<p><strong>權限這件事在這裡再強調一次（安全紅線）</strong>：使用者無權看的文件，必須在<strong>檢索層就過濾掉</strong>（靠 metadata 權限標籤），而不是檢索出來再叫模型「不要講」。Prompt 不是安全邊界（第八章詳述）。</p>
+<h2 id="310-rag">3.10 失敗模式診斷表（RAG 的鑑別診斷）<a class="headerlink" href="#310-rag" title="Permanent link">&para;</a></h2>
+<p>系統答錯了，怎麼查？先問一個問題定位病灶：<strong>「該給模型看的內容，檢索有沒有撈到？」</strong></p>
+<table>
+<thead>
+<tr>
+<th>症狀</th>
+<th>病灶</th>
+<th>處方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>內容撈到了，答案還是錯</td>
+<td><strong>生成問題</strong></td>
+<td>改 prompt（鐵律三條）、換模型、縮小塊內雜訊</td>
+</tr>
+<tr>
+<td>內容沒撈到</td>
+<td><strong>檢索問題</strong></td>
+<td>上 hybrid／rerank、檢討 chunking、檢查 embedding 語言適配</td>
+</tr>
+<tr>
+<td>答案需要跨好幾塊拼起來</td>
+<td><strong>chunking 問題</strong></td>
+<td>parent-document、擴大塊、或多跳檢索</td>
+</tr>
+<tr>
+<td>撈到過期版本</td>
+<td><strong>metadata 問題</strong></td>
+<td>版本欄位＋檢索過濾最新版</td>
+</tr>
+<tr>
+<td>撈到使用者無權看的內容</td>
+<td><strong>權限漏洞（P0）</strong></td>
+<td>檢索層權限過濾，立刻修</td>
+</tr>
+</tbody>
+</table>
+<p>這張表就是「客戶說 RAG 答錯了，你怎麼辦」的標準處理思路：<strong>先分檢索問題還是生成問題，再對症下藥</strong>——而能分開這兩者的前提，是你有 eval（第六章：檢索命中率與答案正確率要分開量測）。</p>
+<hr />
+<h2 id="_2">常見誤解<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>「RAG 就是接個向量資料庫」</strong>——向量庫只是七個環節之一。文件處理與 eval 才是工時大頭。</li>
+<li><strong>「檢索到了就會答對」</strong>——檢索與生成是兩個獨立故障點，要分開量測、分開修。</li>
+<li><strong>「向量搜尋比關鍵字先進，所以取代它」</strong>——精確詞是向量的死角，企業場景要 hybrid。</li>
+<li><strong>「chunk 尺寸有最佳實踐數字」</strong>——只有基準起點（500–1000 token），最佳值由你的文件與 eval 決定。</li>
+<li><strong>「RAG 能保證不幻覺」</strong>——大幅降低、不能歸零。所以要引用（可查證）＋evals（可量測）＋高風險場景人審。對客戶要誠實講這點（題庫 client simulation #3 就是這題）。</li>
+</ol>
+<h2 id="_3">自我檢測<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<ol>
+<li>白板畫出 RAG 兩條線（建庫／查詢），每個環節一句話說明它存在的理由。</li>
+<li>客戶問「為什麼不把全部文件都給 AI 就好」——三個理由。</li>
+<li>chunk 大小的取捨是什麼？你會怎麼決定用多大？</li>
+<li>什麼情況純向量檢索會失敗？怎麼補？</li>
+<li>使用者回報「AI 答錯了」——完整走一遍你的診斷流程。</li>
+<li>權限控制應該做在哪一層？為什麼不能靠 prompt？</li>
+</ol>
+<h2 id="_4">參考答案要點<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>1. 見 3.2；每環節理由散見各節。
+2. 塞不下（視窗）、太貴（token 計費）、塞了也失焦（lost in the middle）。
+3. 小=準但碎、大=全但糊；先 500–1000＋重疊當基準，用 eval set 的檢索命中率與答案正確率決定調整方向；必要時 parent-document。
+4. 精確詞（型號/人名/編號）；上 hybrid（BM25＋向量）。
+5. 先看該內容有沒有被檢索到 → 有=生成問題（prompt/模型），沒有=檢索問題（hybrid/rerank/chunking/embedding）→ 對照 3.10 表。
+6. 檢索層（metadata 權限過濾）；模型無法區分指令與資料，prompt 層的「不要講」可被繞過——prompt 不是安全邊界。
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../ch2-prompt-engineering/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Ch2 Prompt Engineering">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                Ch2 Prompt Engineering
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ch4-agents/" class="md-footer__link md-footer__link--next" aria-label="下一页: Ch4 Agent 與 Tool Use">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                Ch4 Agent 與 Tool Use
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tracking", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1190 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="一個想轉職 FDE 的工程師的學習筆記——LLM、RAG、Agent、MCP、Evals、安全與企業部署">
+      
+      
+      
+        <link rel="canonical" href="https://katelin013.github.io/fde-textbook/en/ch6-evals/">
+      
+      
+        <link rel="prev" href="../ch5-mcp/">
+      
+      
+        <link rel="next" href="../ch7-choosing-approach/">
+      
+      
+        
+          <link rel="alternate" href="../../ch6-evals/" hreflang="zh">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ch6 Evals - FDE Career-Switch Study Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ch6-evals-how-to-prove-your-ai-system-actually-works" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-header__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FDE Career-Switch Study Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ch6 Evals
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換淺色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換淺色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../ch6-evals/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-nav__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    FDE Career-Switch Study Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch1-llm-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch1 How LLMs Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch2-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch2 Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch3-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch3 RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch4-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch4 Agents & Tool Use
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch5-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch5 MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch6 Evals
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch6 Evals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-why-evals-are-the-dividing-line-between-demo-and-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Why Evals Are the Dividing Line Between Demo and Production
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-the-golden-set-the-foundation-of-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 The Golden Set: The Foundation of Everything
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-the-four-layer-evaluation-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 The Four-Layer Evaluation Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 The Four-Layer Evaluation Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-automated-metrics-judged-by-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: Automated Metrics (Judged by Code)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-llm-as-judge-one-model-grading-another" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2: LLM-as-judge (One Model Grading Another)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-human-review-expensiveuse-it-where-it-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3: Human Review (Expensive—Use It Where It Counts)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-online-signals-most-real-slowest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4: Online Signals (Most Real, Slowest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-workflow-eval-driven-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Workflow: Eval-Driven Development
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-rag-evals-must-be-split-in-two-echoing-chapter-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 RAG Evals Must Be Split in Two (Echoing Chapter 3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Misconceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-points-for-the-reference-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points for the Reference Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch7-choosing-approach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch7 Choosing an Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch8-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch8 Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch9-enterprise-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch9 Enterprise Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-infra-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch10 Infrastructure Refresher
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-why-evals-are-the-dividing-line-between-demo-and-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Why Evals Are the Dividing Line Between Demo and Production
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-the-golden-set-the-foundation-of-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 The Golden Set: The Foundation of Everything
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-the-four-layer-evaluation-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 The Four-Layer Evaluation Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 The Four-Layer Evaluation Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-automated-metrics-judged-by-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: Automated Metrics (Judged by Code)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-llm-as-judge-one-model-grading-another" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2: LLM-as-judge (One Model Grading Another)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-human-review-expensiveuse-it-where-it-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3: Human Review (Expensive—Use It Where It Counts)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-online-signals-most-real-slowest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4: Online Signals (Most Real, Slowest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-workflow-eval-driven-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Workflow: Eval-Driven Development
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-rag-evals-must-be-split-in-two-echoing-chapter-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 RAG Evals Must Be Split in Two (Echoing Chapter 3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Misconceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-points-for-the-reference-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points for the Reference Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ch6-evals-how-to-prove-your-ai-system-actually-works">Ch6 Evals: How to Prove Your AI System Actually Works<a class="headerlink" href="#ch6-evals-how-to-prove-your-ai-system-actually-works" title="Permanent link">&para;</a></h1>
+<h2 id="chapter-goals">Chapter Goals<a class="headerlink" href="#chapter-goals" title="Permanent link">&para;</a></h2>
+<p>This is a <strong>make-or-break chapter</strong>—the core question is "How do you know your system actually works?" After reading it, you'll be able to: (1) explain the four-layer eval architecture; (2) actually build a golden set and an LLM-as-judge (in W3 you'll do this once for Trilo); (3) frame evals as "the test suite for an AI system."</p>
+<hr />
+<h2 id="61-why-evals-are-the-dividing-line-between-demo-and-production">6.1 Why Evals Are the Dividing Line Between Demo and Production<a class="headerlink" href="#61-why-evals-are-the-dividing-line-between-demo-and-production" title="Permanent link">&para;</a></h2>
+<p>Traditional software: fixed input → fixed output → just write test assertions.
+LLM systems: outputs are probabilistic, and "correct" often has no single standard (Is the summary good? Is the tone right?)—<strong>traditional asserts break down</strong>.</p>
+<p>So a brutal dividing line appears:</p>
+<ul>
+<li>People who can build a <strong>demo</strong>: cherry-pick three examples that went well and show them to the boss.</li>
+<li>People who can build <strong>production</strong>: can answer "across 500 real cases, what's the accuracy, which category is weakest, and did this change make it worse?"</li>
+</ul>
+<p>What enterprise customers pay for is the latter. OpenAI's FDE team even bakes this into their process—"<strong>build the eval first, verify it hits the bar, and only then deliver</strong>" (see the three-phase model in <code>research/fde-role-research.md</code>)—the eval isn't post-delivery QA, it's a pre-delivery contract.</p>
+<p>In one line: <strong>"The eval set is the test suite for an AI system. Changing a prompt without an eval is like changing production code with no tests."</strong></p>
+<h2 id="62-the-golden-set-the-foundation-of-everything">6.2 The Golden Set: The Foundation of Everything<a class="headerlink" href="#62-the-golden-set-the-foundation-of-everything" title="Permanent link">&para;</a></h2>
+<p>A <strong>golden set</strong> = a batch of "input + expected result" test data. How to build one:</p>
+<ol>
+<li><strong>Collect real inputs</strong>: pull from real user queries and the customer's historical tickets—don't make up your own test cases (imagined cases are always cleaner than real ones)</li>
+<li><strong>Layer your coverage</strong>: common scenarios + edge cases + <strong>red-line cases</strong> (things that must never be wrong: safety, compliance, dollar amounts)</li>
+<li><strong>Define "expected"</strong>: for cases with a standard answer, write the standard answer; for those without, write a <strong>scoring rubric</strong></li>
+<li><strong>Start small</strong>: 50–100 items is enough to get to work, then keep back-filling with bad cases you discover in production—<strong>every production error should become an eval item</strong> (same discipline as bug regression tests)</li>
+</ol>
+<h2 id="63-the-four-layer-evaluation-architecture">6.3 The Four-Layer Evaluation Architecture<a class="headerlink" href="#63-the-four-layer-evaluation-architecture" title="Permanent link">&para;</a></h2>
+<p>Cheap to expensive, fast to slow—four layers that complement each other:</p>
+<h3 id="layer-1-automated-metrics-judged-by-code">Layer 1: Automated Metrics (Judged by Code)<a class="headerlink" href="#layer-1-automated-metrics-judged-by-code" title="Permanent link">&para;</a></h3>
+<p>For the parts that have objective standards, verify directly with code: exact match, key-field comparison, format validity (JSON schema), whether cited document IDs are correct, retrieval hit rate (did the documents that should have been fetched land in the top-k). <strong>Fast, free, and runnable in full on every change</strong>—this layer is the workhorse of regression testing.</p>
+<h3 id="layer-2-llm-as-judge-one-model-grading-another">Layer 2: LLM-as-judge (One Model Grading Another)<a class="headerlink" href="#layer-2-llm-as-judge-one-model-grading-another" title="Permanent link">&para;</a></h3>
+<p>For things with no single correct answer (summary quality, answer completeness, tone), use another model to score against a <strong>rubric</strong>. Success or failure comes down entirely to how concrete the rubric is:</p>
+<div class="highlight"><pre><span></span><code>Bad rubric: &quot;Is the answer quality good? Score 1–5&quot;        ← vague, the judge will score randomly
+Good rubric: item-by-item checks, each 0/1—
+  [ ] Did it cite the correct source document?
+  [ ] Did it include the specific amount and date?
+  [ ] For content not in the document, did it explicitly say &quot;not mentioned&quot;?
+  [ ] Are there no fabricated policy clauses?
+</code></pre></div>
+<p><strong>The judge must be calibrated</strong>: have a batch scored by humans too, and compare the agreement rate; if agreement isn't high enough, fix the rubric. An uncalibrated judge is a feel-good machine.</p>
+<h3 id="layer-3-human-review-expensiveuse-it-where-it-counts">Layer 3: Human Review (Expensive—Use It Where It Counts)<a class="headerlink" href="#layer-3-human-review-expensiveuse-it-where-it-counts" title="Permanent link">&para;</a></h3>
+<p>Stratified sampling (sample more from high-risk categories and new features), with two annotators to check consistency. Human results also feed back to calibrate the Layer 2 judge—forming a closed loop.</p>
+<h3 id="layer-4-online-signals-most-real-slowest">Layer 4: Online Signals (Most Real, Slowest)<a class="headerlink" href="#layer-4-online-signals-most-real-slowest" title="Permanent link">&para;</a></h3>
+<p>User behavior (re-ask rate, edit rate, thumbs up/down), business metrics (handling time, escalation-to-human rate, complaints). This layer tells you whether your eval set has drifted from the real world.</p>
+<h2 id="64-workflow-eval-driven-development">6.4 Workflow: Eval-Driven Development<a class="headerlink" href="#64-workflow-eval-driven-development" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+  Q["real query"] --&gt; GS["golden set (with rubric and red lines)"]
+  CH["each change: prompt / model / retrieval params"] --&gt; REG["run automated metrics + LLM-as-judge full regression"]
+  GS --&gt; REG
+  REG --&gt; D{"score up? down? which category dropped?"}
+  D --&gt;|"passes the bar"| SHIP["ship"] --&gt; MON["online signal monitoring"] --&gt; BC["back-fill bad cases"] --&gt; GS
+  D --&gt;|"regressed"| FIX["fix, then re-run"] --&gt; REG</code></pre>
+<p>This diagram answers three common questions:</p>
+<ul>
+<li>"How do you safely swap models / change a prompt?" → Run the regression, look at the scores, and especially look at <strong>the per-category breakdown</strong> (total score up but the red-line category down = don't ship)</li>
+<li>"The customer says the model got dumber—how do you investigate?" → First run the eval to localize it: did the score really drop? Which category dropped? (drift investigation)</li>
+<li>"What accuracy do we need before we can ship?" → Turn it back on the business: what's the cost of an error? Low-risk scenarios are usable at 90%, high-risk scenarios need 99% + a human-review gate. <strong>The threshold is a business decision, the measurement is an engineering responsibility.</strong></li>
+</ul>
+<h2 id="65-rag-evals-must-be-split-in-two-echoing-chapter-3">6.5 RAG Evals Must Be Split in Two (Echoing Chapter 3)<a class="headerlink" href="#65-rag-evals-must-be-split-in-two-echoing-chapter-3" title="Permanent link">&para;</a></h2>
+<p>RAG system evals must <strong>measure retrieval and generation separately</strong>:</p>
+<ul>
+<li><strong>Retrieval metric</strong>: did the passage that should have been fetched make it into the top-k (hit rate/recall)</li>
+<li><strong>Generation metric</strong>: given the correct passage, is the answer right (faithfulness/accuracy)</li>
+</ul>
+<p>If you only measure the final answer, you'll never know whether to fix retrieval or fix the prompt—the diagnostic table in Chapter 3 only works if you measure these two parts separately.</p>
+<hr />
+<h2 id="common-misconceptions">Common Misconceptions<a class="headerlink" href="#common-misconceptions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>"I looked at a few examples, results were good"</strong>—demo thinking. The examples you look at train your own bias; they aren't measurement.</li>
+<li><strong>"92% accuracy, great"</strong>—a single total score is meaningless: the red-line category might be at 60%. Always report by layer.</li>
+<li><strong>"Do the eval once and you're done"</strong>—an eval is alive: keep back-filling bad cases from production, or it drifts from the real world.</li>
+<li><strong>"LLM-as-judge is unreliable, so don't use it"</strong>—an uncalibrated judge is unreliable; a calibrated judge is the only way to scale. All-human is expensive, slow, and inconsistent.</li>
+<li><strong>"Build the features first, worry about evals later"</strong>—the order is backwards. Without an eval you can't even answer "did the change make it better," and every optimization becomes blind patching.</li>
+</ol>
+<h2 id="self-check">Self-Check<a class="headerlink" href="#self-check" title="Permanent link">&para;</a></h2>
+<ol>
+<li>"How do you know your AI system actually works?"—give a complete answer using the four-layer architecture (in under 3 minutes).</li>
+<li>Design a golden set for an "insurance policy clause Q&amp;A RAG": give an example each for source, layering, and red-line cases.</li>
+<li>Write an LLM-as-judge rubric (in item-by-item check format), and explain how to calibrate the judge.</li>
+<li>Why must RAG evals be split into retrieval and generation?</li>
+<li>The customer asks "what % do we need before we can ship?"—what's your standard answer?</li>
+</ol>
+<h2 id="key-points-for-the-reference-answers">Key Points for the Reference Answers<a class="headerlink" href="#key-points-for-the-reference-answers" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>1. Automated metrics → LLM-as-judge (rubric + calibration) → human stratified sampling → online signals; add the line &quot;the eval set is the test suite for the AI.&quot;
+2. Real support tickets as the source; split into common policy types / edge cases / red lines (claim amounts and compliance wording must never be wrong); define a rubric per category.
+3. Item-by-item 0/1 checks; sample and have humans co-score to get an agreement rate, and if it doesn&#39;t hold up, fix the rubric and recalibrate.
+4. Two independent failure points; without splitting you don&#39;t know which end to fix (connects to the Ch3 diagnostic table).
+5. The threshold is a business decision (cost of an error), the measurement is an engineering responsibility; for high-risk cases, add a human-review gate rather than chasing 100%.
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../ch5-mcp/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Ch5 MCP">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Ch5 MCP
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ch7-choosing-approach/" class="md-footer__link md-footer__link--next" aria-label="Next: Ch7 Choosing an Approach">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Ch7 Choosing an Approach
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

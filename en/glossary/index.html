@@ -1,0 +1,1490 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="一個想轉職 FDE 的工程師的學習筆記——LLM、RAG、Agent、MCP、Evals、安全與企業部署">
+      
+      
+      
+        <link rel="canonical" href="https://katelin013.github.io/fde-textbook/en/glossary/">
+      
+      
+        <link rel="prev" href="../ch10-infra-basics/">
+      
+      
+      
+        
+          <link rel="alternate" href="../../glossary/" hreflang="zh">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Glossary - FDE Career-Switch Study Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#glossary-quick-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-header__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FDE Career-Switch Study Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Glossary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換淺色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換淺色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../glossary/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-nav__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    FDE Career-Switch Study Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch1-llm-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch1 How LLMs Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch2-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch2 Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch3-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch3 RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch4-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch4 Agents & Tool Use
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch5-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch5 MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch6-evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch6 Evals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch7-choosing-approach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch7 Choosing an Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch8-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch8 Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch9-enterprise-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch9 Enterprise Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-infra-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch10 Infrastructure Refresher
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#llm-basics-ch1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Basics (Ch1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt-engineering-ch2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt Engineering (Ch2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-ch3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG (Ch3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-ch4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent (Ch4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-ch5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP (Ch5)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technology-selection-ch7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technology Selection (Ch7)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evals-ch6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evals (Ch6)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-ch8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security (Ch8)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-deployment-and-infrastructure-ch9-ch10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Deployment and Infrastructure (Ch9 / Ch10)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-cli-tools-a-cross-tool-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI CLI Tools: A Cross-Tool Comparison
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI CLI Tools: A Cross-Tool Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-should-the-rules-be-defined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Should the Rules Be Defined?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-evolution-of-ai-engineering-paradigms-from-prompt-to-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Evolution of AI Engineering Paradigms: From Prompt to Loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#llm-basics-ch1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Basics (Ch1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt-engineering-ch2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt Engineering (Ch2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-ch3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG (Ch3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-ch4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent (Ch4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-ch5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP (Ch5)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technology-selection-ch7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technology Selection (Ch7)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evals-ch6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evals (Ch6)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-ch8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security (Ch8)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-deployment-and-infrastructure-ch9-ch10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Deployment and Infrastructure (Ch9 / Ch10)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-cli-tools-a-cross-tool-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI CLI Tools: A Cross-Tool Comparison
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI CLI Tools: A Cross-Tool Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-should-the-rules-be-defined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Should the Rules Be Defined?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-evolution-of-ai-engineering-paradigms-from-prompt-to-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Evolution of AI Engineering Paradigms: From Prompt to Loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="glossary-quick-reference">Glossary Quick Reference<a class="headerlink" href="#glossary-quick-reference" title="Permanent link">&para;</a></h1>
+<p>A one-stop list of the AI terms every FDE needs — full English name, Chinese, and a one-line explanation. Grouped by topic and mapped to each chapter, so you can skim it quickly for reference.</p>
+<h2 id="llm-basics-ch1">LLM Basics (Ch1)<a class="headerlink" href="#llm-basics-ch1" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LLM</strong> (Large Language Model)</td>
+<td>大型語言模型</td>
+<td>A model trained on massive amounts of text that works by "predicting the next word"; it can write code, hold conversations, and reason, but at heart it's playing word-chain, not fact-checking.</td>
+</tr>
+<tr>
+<td><strong>Token</strong></td>
+<td>詞元</td>
+<td>The smallest unit a model uses to process text; cost, capacity, and speed are all measured in it.</td>
+</tr>
+<tr>
+<td><strong>Context Window</strong></td>
+<td>上下文視窗</td>
+<td>The maximum total number of tokens a model can "see" in a single pass; anything that doesn't fit, the model can't see.</td>
+</tr>
+<tr>
+<td><strong>Temperature</strong></td>
+<td>溫度</td>
+<td>A parameter that controls how random the output is; low = stable and reproducible, high = varied and creative.</td>
+</tr>
+<tr>
+<td><strong>Hallucination</strong></td>
+<td>幻覺</td>
+<td>When a model states something wrong with total confidence; it stems from the model playing word-chain rather than verifying facts.</td>
+</tr>
+<tr>
+<td><strong>Streaming</strong></td>
+<td>串流輸出</td>
+<td>Returning output as it's being generated, so users see the first word sooner.</td>
+</tr>
+<tr>
+<td><strong>TTFT</strong> (Time To First Token)</td>
+<td>首字延遲</td>
+<td>The wait from when a user hits send to when they see the first word; a key metric for user experience.</td>
+</tr>
+<tr>
+<td><strong>Inference</strong></td>
+<td>推論</td>
+<td>The process of the model "running once and producing output"; the counterpart to training.</td>
+</tr>
+<tr>
+<td><strong>Prompt Caching</strong></td>
+<td>提示快取</td>
+<td>Caching the opening (prefix) that stays the same every time, to save cost and speed things up.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prompt-engineering-ch2">Prompt Engineering (Ch2)<a class="headerlink" href="#prompt-engineering-ch2" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>提示詞</td>
+<td>The instructions and content you feed the model, which determine how it answers.</td>
+</tr>
+<tr>
+<td><strong>System Prompt</strong></td>
+<td>系統提示</td>
+<td>The top-level instruction that sets the model's role and rules, usually placed at the very front of the conversation.</td>
+</tr>
+<tr>
+<td><strong>Zero-shot / Few-shot</strong></td>
+<td>零樣本 / 少樣本</td>
+<td>Giving no examples / giving a few examples for the model to follow.</td>
+</tr>
+<tr>
+<td><strong>Chain-of-Thought</strong> (CoT)</td>
+<td>思維鏈</td>
+<td>Having the model "think step by step" before answering, to improve reasoning accuracy.</td>
+</tr>
+<tr>
+<td><strong>Structured Output</strong></td>
+<td>結構化輸出</td>
+<td>Requiring the model to output a fixed format (such as JSON) so your program can easily take it from there.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rag-ch3">RAG (Ch3)<a class="headerlink" href="#rag-ch3" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RAG</strong> (Retrieval-Augmented Generation)</td>
+<td>檢索增強生成</td>
+<td>First pull relevant content from your database, then feed it to the model to answer, so it can draw on private knowledge.</td>
+</tr>
+<tr>
+<td><strong>Embedding</strong></td>
+<td>嵌入向量</td>
+<td>Turning text into a string of numbers (a vector), so that semantically similar content ends up with similar values.</td>
+</tr>
+<tr>
+<td><strong>Vector Database</strong></td>
+<td>向量資料庫</td>
+<td>A database built to store embeddings and support "find the most semantically similar" queries.</td>
+</tr>
+<tr>
+<td><strong>Chunking</strong></td>
+<td>切塊 / 分段</td>
+<td>Splitting long documents into small pieces before embedding and retrieval.</td>
+</tr>
+<tr>
+<td><strong>Semantic Search</strong></td>
+<td>語意搜尋</td>
+<td>Finding content by "meaning" rather than by keyword matching.</td>
+</tr>
+<tr>
+<td><strong>Reranking</strong></td>
+<td>重排序</td>
+<td>Finely re-sorting the initial retrieval results to push the most relevant ones to the front.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="agent-ch4">Agent (Ch4)<a class="headerlink" href="#agent-ch4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Agent</strong></td>
+<td>代理 / 智能體</td>
+<td>An AI system that can plan its own steps, call tools, and loop through execution to reach a goal.</td>
+</tr>
+<tr>
+<td><strong>Tool Use / Function Calling</strong></td>
+<td>工具呼叫 / 函式呼叫</td>
+<td>Letting the model call external functions (look up data, do math, hit an API) to gain abilities it doesn't have on its own.</td>
+</tr>
+<tr>
+<td><strong>ReAct</strong> (Reason + Act)</td>
+<td>推理並行動</td>
+<td>The classic agent pattern of a "think → act → observe" loop.</td>
+</tr>
+<tr>
+<td><strong>Orchestration</strong></td>
+<td>編排</td>
+<td>The overall flow control that coordinates multiple steps / tools / models.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mcp-ch5">MCP (Ch5)<a class="headerlink" href="#mcp-ch5" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MCP</strong> (Model Context Protocol)</td>
+<td>模型情境協定</td>
+<td>An open protocol that lets AI applications connect to external tools and data sources through a single unified standard.</td>
+</tr>
+<tr>
+<td><strong>MCP Server / Client</strong></td>
+<td>MCP 伺服端 / 用戶端</td>
+<td>The Server provides tools and data; the Client (the AI application) connects to and uses them.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="technology-selection-ch7">Technology Selection (Ch7)<a class="headerlink" href="#technology-selection-ch7" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fine-tuning</strong></td>
+<td>微調</td>
+<td>Retraining a model on extra data to change its behavior or style.</td>
+</tr>
+<tr>
+<td><strong>Prompt vs RAG vs Fine-tune</strong></td>
+<td>三種調校手段</td>
+<td>The selection order from cheap to expensive: try Prompt first, then RAG, and only then Fine-tune.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evals-ch6">Evals (Ch6)<a class="headerlink" href="#evals-ch6" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Evals</strong> (Evaluations)</td>
+<td>評估</td>
+<td>A mechanism that uses a test set to quantify the quality of AI output; it's the AI version of automated testing.</td>
+</tr>
+<tr>
+<td><strong>Ground Truth</strong></td>
+<td>標準答案 / 基準真值</td>
+<td>The correct answer you compare model output against to judge right from wrong.</td>
+</tr>
+<tr>
+<td><strong>LLM-as-a-Judge</strong></td>
+<td>以 LLM 當評審</td>
+<td>Using another LLM to automatically score how good or bad a model's output is.</td>
+</tr>
+<tr>
+<td><strong>Regression</strong></td>
+<td>回歸（測試）</td>
+<td>Using a test set after a change to confirm that "what used to work hasn't gotten worse."</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-ch8">Security (Ch8)<a class="headerlink" href="#security-ch8" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prompt Injection</strong></td>
+<td>提示注入</td>
+<td>An attacker hides malicious instructions inside the input data to trick the model into executing them.</td>
+</tr>
+<tr>
+<td><strong>Jailbreak</strong></td>
+<td>越獄</td>
+<td>Using clever wording to bypass a model's safety limits and get it to do something it should refuse.</td>
+</tr>
+<tr>
+<td><strong>Guardrails</strong></td>
+<td>護欄</td>
+<td>Checks and filters added before and after the model to block improper input / output.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="enterprise-deployment-and-infrastructure-ch9-ch10">Enterprise Deployment and Infrastructure (Ch9 / Ch10)<a class="headerlink" href="#enterprise-deployment-and-infrastructure-ch9-ch10" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Chinese</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latency</strong></td>
+<td>延遲</td>
+<td>The time it takes from request to response; it directly affects user experience.</td>
+</tr>
+<tr>
+<td><strong>Throughput</strong></td>
+<td>吞吐量</td>
+<td>The volume of requests that can be handled per unit of time; it affects scale and cost.</td>
+</tr>
+<tr>
+<td><strong>Batch API</strong></td>
+<td>批次 API</td>
+<td>Submitting non-urgent work in batches for non-real-time processing, usually at half price.</td>
+</tr>
+<tr>
+<td><strong>SLA</strong> (Service Level Agreement)</td>
+<td>服務等級協議</td>
+<td>The provider's committed metrics for things like availability and latency.</td>
+</tr>
+<tr>
+<td><strong>FDE</strong> (Forward Deployed Engineer)</td>
+<td>前進部署工程師</td>
+<td>The engineering role that goes on-site with the customer and actually integrates and lands the AI product.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ai-cli-tools-a-cross-tool-comparison">AI CLI Tools: A Cross-Tool Comparison<a class="headerlink" href="#ai-cli-tools-a-cross-tool-comparison" title="Permanent link">&para;</a></h2>
+<p>The three major AI coding CLIs: <strong>Claude Code</strong> (Anthropic), <strong>Gemini CLI</strong> (Google), and <strong>Codex CLI</strong> (OpenAI). The same feature often has a different name or filename across the three tools; the table below maps them, with a one-line note on purpose.</p>
+<table>
+<thead>
+<tr>
+<th>Concept (purpose)</th>
+<th>Claude Code</th>
+<th>Gemini CLI</th>
+<th>Codex CLI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Project instructions / memory file</strong><br>Tells the AI the project's rules, conventions, and architecture; read on every conversation</td>
+<td><code>CLAUDE.md</code></td>
+<td><code>GEMINI.md</code></td>
+<td><code>AGENTS.md</code></td>
+</tr>
+<tr>
+<td><strong>Config file</strong><br>Settings for permissions, default model, environment variables, and so on</td>
+<td><code>.claude/settings.json</code></td>
+<td><code>.gemini/settings.json</code></td>
+<td><code>~/.codex/config.toml</code></td>
+</tr>
+<tr>
+<td><strong>Custom slash commands</strong><br>Save frequently used prompts as a <code>/command</code> for one-click reuse</td>
+<td>Slash commands<br><code>.claude/commands/*.md</code></td>
+<td>Custom commands<br><code>.gemini/commands/*.toml</code></td>
+<td>Custom prompts<br><code>~/.codex/prompts/*.md</code></td>
+</tr>
+<tr>
+<td><strong>Skills</strong><br>Workflows bundled with instructional files that the AI applies automatically based on context</td>
+<td>Agent Skills (<code>SKILL.md</code>, auto-triggered)</td>
+<td>Provided via Extensions</td>
+<td>Skills (<code>~/.codex/skills/…/SKILL.md</code>)</td>
+</tr>
+<tr>
+<td><strong>Subagents</strong><br>Spin up a clone to run subtasks in an independent context</td>
+<td>Subagents (<code>.claude/agents/*.md</code>)</td>
+<td>Not natively available yet</td>
+<td>Not natively available yet (can pair with the Agents SDK)</td>
+</tr>
+<tr>
+<td><strong>Plugins / Extensions</strong><br>Bundle skills, commands, and MCP into an installable, version-controlled unit</td>
+<td>Plugins (bundle skills / agents / commands / hooks / MCP)</td>
+<td>Extensions (<code>gemini-extension.json</code>)</td>
+<td>No official plugin system</td>
+</tr>
+<tr>
+<td><strong>Marketplace</strong><br>A source that lets plugins be searched, installed, and updated</td>
+<td>Yes (<code>/plugin marketplace add …</code>)</td>
+<td>Yes (<code>gemini extensions install …</code>)</td>
+<td>No official marketplace</td>
+</tr>
+<tr>
+<td><strong>MCP server</strong><br>Connect the AI to external tools and data sources via a unified protocol</td>
+<td>Supported</td>
+<td>Supported</td>
+<td>Supported</td>
+</tr>
+</tbody>
+</table>
+<h3 id="where-should-the-rules-be-defined">Where Should the Rules Be Defined?<a class="headerlink" href="#where-should-the-rules-be-defined" title="Permanent link">&para;</a></h3>
+<p>To set project rules for these three CLIs (conventions, architecture, style, prohibitions), write them into each tool's <strong>project instructions file</strong> — placed at the project root and automatically loaded on every conversation:</p>
+<ul>
+<li><strong>Claude Code</strong> → <code>CLAUDE.md</code></li>
+<li><strong>Gemini CLI</strong> → <code>GEMINI.md</code></li>
+<li><strong>Codex CLI</strong> → <code>AGENTS.md</code></li>
+</ul>
+<p>All three also support placing the file in your home directory (e.g. <code>~/.claude/CLAUDE.md</code>) to serve as cross-project <strong>global rules</strong>. Among them, <strong><code>AGENTS.md</code> is gradually becoming the cross-tool open standard</strong>: Codex CLI reads it natively, and Gemini CLI can also be configured in <code>settings.json</code> (<code>context.fileName</code>) to read <code>AGENTS.md</code> instead — so if you want to "write one set of rules to feed multiple tools," <code>AGENTS.md</code> is the preferred choice.</p>
+<p>(Files like <code>.cursor/rules</code> and <code>.windsurfrules</code> are how <strong>editor-type</strong> tools such as Cursor and Windsurf handle "rules," and have nothing to do with the three CLIs above.)</p>
+<hr />
+<h2 id="the-evolution-of-ai-engineering-paradigms-from-prompt-to-loop">The Evolution of AI Engineering Paradigms: From Prompt to Loop<a class="headerlink" href="#the-evolution-of-ai-engineering-paradigms-from-prompt-to-loop" title="Permanent link">&para;</a></h2>
+<p>The "core skill" of collaborating with AI has been climbing up levels of abstraction over the past few years — the bottleneck has moved from "the words you say" → "the context you provide" → "the spec you write" → "the loop you design." The four stages are <strong>cumulative</strong>, not replacements for one another: you still use prompt engineering inside loop engineering.</p>
+<table>
+<thead>
+<tr>
+<th>Evolution stage</th>
+<th>Era</th>
+<th>Core question</th>
+<th>One-line explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prompt Engineering</strong><br>提示工程</td>
+<td>~2022–2024</td>
+<td>"How should I phrase things to get the best single output?"</td>
+<td>Polishing a single instruction: few-shot, CoT, role-play, XML tags. Chasing "one input → one best output."</td>
+</tr>
+<tr>
+<td><strong>Context Engineering</strong><br>情境工程</td>
+<td>2025</td>
+<td>"What should I put inside the context window?"</td>
+<td>Kicked off by Karpathy: a single prompt isn't enough; you need to dynamically assemble the entire context — retrieved documents, conversation history, tool definitions, RAG results.</td>
+</tr>
+<tr>
+<td><strong>Spec-Driven Development</strong><br>規格驅動開發 (SDD, also called Spec Engineering)</td>
+<td>2025</td>
+<td>"What spec should I write so the agent can build to it?"</td>
+<td>Instead of dictating instructions sentence by sentence, you first write a clear spec and hand it off to the agent to implement (GitHub Spec Kit and AWS Kiro are representative tools).</td>
+</tr>
+<tr>
+<td><strong>Loop Engineering</strong><br>循環工程 (also called Harness Engineering)</td>
+<td>2026</td>
+<td>"What system should I design so the agent finds work, finishes it, verifies it, and remembers it — without me sitting in the loop?"</td>
+<td>Emerged in June 2026. The focus shifts from "writing prompts" to "designing the loop that drives the agent": the generation side reruns cheaply, and the real bottleneck is the verifier.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>The key point for FDEs</strong>: On the question of whether "prompt engineering will become obsolete," the right framing is — it hasn't been made obsolete, it's been <strong>absorbed</strong> into a higher-level skill. Being able to lay out this evolutionary line (prompt → context → spec → loop) and explain "why the bottleneck keeps moving up" shows that you're keeping pace and thinking clearly.</p>
+</blockquote>
+<p><em>Note: <code>spec engineer</code> and <code>sdd engineer</code> are actually the same thing (SDD = Spec-Driven Development), and the table above has merged them; <code>context engineering</code> is a crucial link that your original list missed, and it has been added back in.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../ch10-infra-basics/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Ch10 Infrastructure Refresher">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Ch10 Infrastructure Refresher
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

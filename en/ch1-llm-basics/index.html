@@ -1,0 +1,1198 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="一個想轉職 FDE 的工程師的學習筆記——LLM、RAG、Agent、MCP、Evals、安全與企業部署">
+      
+      
+      
+        <link rel="canonical" href="https://katelin013.github.io/fde-textbook/en/ch1-llm-basics/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../ch2-prompt-engineering/">
+      
+      
+        
+          <link rel="alternate" href="../../ch1-llm-basics/" hreflang="zh">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ch1 How LLMs Work - FDE Career-Switch Study Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ch1-how-an-llm-actually-works" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-header__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FDE Career-Switch Study Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ch1 How LLMs Work
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切換深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="deep-orange"  aria-label="切換淺色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切換淺色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../ch1-llm-basics/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="FDE Career-Switch Study Notes" class="md-nav__button md-logo" aria-label="FDE Career-Switch Study Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    FDE Career-Switch Study Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/katelin013/fde-textbook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    katelin013/fde-textbook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch1 How LLMs Work
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch1 How LLMs Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-start-with-a-metaphor-a-ridiculously-good-word-chaining-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Start With a Metaphor: A Ridiculously Good Word-Chaining Machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-token-the-unit-of-measurement-in-the-models-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Token: The Unit of Measurement in the Model's World
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-context-window-the-models-working-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Context Window: The Model's Working Memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-temperature-the-knob-that-controls-randomness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Temperature: The Knob That Controls Randomness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-streaming-and-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Streaming and Latency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-the-cost-model-and-prompt-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 The Cost Model and Prompt Caching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-the-built-in-limitations-all-in-one-place" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 The Built-in Limitations, All in One Place
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Misconceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-points-for-the-reference-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points for the Reference Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch2-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch2 Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch3-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch3 RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch4-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch4 Agents & Tool Use
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch5-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch5 MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch6-evals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch6 Evals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch7-choosing-approach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch7 Choosing an Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch8-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch8 Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch9-enterprise-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch9 Enterprise Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-infra-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch10 Infrastructure Refresher
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-start-with-a-metaphor-a-ridiculously-good-word-chaining-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Start With a Metaphor: A Ridiculously Good Word-Chaining Machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-token-the-unit-of-measurement-in-the-models-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Token: The Unit of Measurement in the Model's World
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-context-window-the-models-working-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Context Window: The Model's Working Memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-temperature-the-knob-that-controls-randomness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Temperature: The Knob That Controls Randomness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-streaming-and-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Streaming and Latency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-the-cost-model-and-prompt-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 The Cost Model and Prompt Caching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-the-built-in-limitations-all-in-one-place" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 The Built-in Limitations, All in One Place
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-misconceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Misconceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-points-for-the-reference-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points for the Reference Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ch1-how-an-llm-actually-works">Ch1 How an LLM Actually Works<a class="headerlink" href="#ch1-how-an-llm-actually-works" title="Permanent link">&para;</a></h1>
+<h2 id="chapter-goals"><strong>Chapter Goals</strong><a class="headerlink" href="#chapter-goals" title="Permanent link">&para;</a></h2>
+<p>By the end of this chapter you'll be able to:<br>
+(1) Explain, in plain language, how an LLM works and what its built-in limitations are, to a customer;<br>
+(2) Read an API bill and know how to keep costs down;<br>
+(3) Clearly explain what the built-in limitations of LLMs are, and the corresponding engineering countermeasures.<br></p>
+<hr />
+<h2 id="11-start-with-a-metaphor-a-ridiculously-good-word-chaining-machine"><strong>1.1 Start With a Metaphor: A Ridiculously Good Word-Chaining Machine</strong><a class="headerlink" href="#11-start-with-a-metaphor-a-ridiculously-good-word-chaining-machine" title="Permanent link">&para;</a></h2>
+<p>At its core, an LLM is a "word-chaining machine": you give it a stretch of text, it predicts "what the next word is most likely to be," writes it out, then predicts the one after that, and keeps chaining along. It has read an enormous amount of text from across the internet, so it chains extremely well—so well that it can write code, reason, and hold a conversation.</p>
+<p>This metaphor immediately explains three things:</p>
+<ol>
+<li><strong>What it outputs is "the most likely continuation," not "a verified fact"</strong>—which is why hallucinations happen: it states something false with a completely straight face. It isn't lying to you; it's just chaining words.</li>
+<li><strong>It has no "database"</strong>—its knowledge is compressed into the model's parameters: fuzzy, non-updatable, and impossible to cite a source for. If you want it to use your company's data, you have to feed that data to it yourself (that's exactly what RAG, in Chapter 3, is about).</li>
+<li><strong>Every time, it starts the chain fresh</strong>—the model itself has no memory. "It remembers our conversation" is an illusion: the application re-stuffs the conversation history back into it every single time.</li>
+</ol>
+<blockquote>
+<p>The version you tell a customer: "AI is like a consultant who has read every document in the world and has an astonishing memory but never checks anything. Our engineering job is to set that consultant up with a database, a verification process, and a permissions system."</p>
+</blockquote>
+<h2 id="12-token-the-unit-of-measurement-in-the-models-world">1.2 Token: The Unit of Measurement in the Model's World<a class="headerlink" href="#12-token-the-unit-of-measurement-in-the-models-world" title="Permanent link">&para;</a></h2>
+<p>The model doesn't process text one character at a time—it processes it one <strong>token</strong> at a time. A token is a "common string fragment": in English, roughly 4 characters per token; in Chinese, roughly 1–2 tokens per character.</p>
+<p>Why do you have to care about tokens? Because three things in the LLM world are all measured in them:</p>
+<table>
+<thead>
+<tr>
+<th>Thing</th>
+<th>Measured in tokens</th>
+<th>What it means in practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cost</strong></td>
+<td>input / output priced separately</td>
+<td>output is usually several times more expensive. Rambling output = burning money</td>
+</tr>
+<tr>
+<td><strong>Capacity</strong></td>
+<td>the Context Window limit</td>
+<td>if it won't fit, you have to trim or summarize</td>
+</tr>
+<tr>
+<td><strong>Speed</strong></td>
+<td>generated token by token</td>
+<td>asking for short output = faster replies</td>
+</tr>
+</tbody>
+</table>
+<h2 id="13-context-window-the-models-working-memory">1.3 Context Window: The Model's Working Memory<a class="headerlink" href="#13-context-window-the-models-working-memory" title="Permanent link">&para;</a></h2>
+<p>The <strong>Context Window</strong> is the upper limit on the total number of tokens the model can "see" in a single pass—including everything you give it (the system prompt, conversation history, documents) plus the reply it's about to generate.</p>
+<p>Think of it as a <strong>desk surface</strong>: the desk is big (modern models range from a hundred thousand to a million tokens), but it's still finite. Anything that won't fit on the desk, the model simply cannot see—no matter how important that document is.</p>
+<p>Three practical takeaways:</p>
+<ol>
+<li><strong>Long conversations "forget"</strong>: once the history exceeds the window, the earliest content gets trimmed away. Fixes: compress with a summary, or store the key points externally and retrieve them back when needed.</li>
+<li><strong>"Just dump all the company's documents in" doesn't work</strong>: too much volume, too expensive, and—</li>
+<li><strong>Lost in the middle</strong>: even if it all fits, the model pays weaker attention to content in the "middle" of the window, so putting the important stuff at the beginning and the end works best. The more noise you stuff in, the more easily the key information gets diluted. <strong>"Stuff in more" does not equal "answer better"; giving the right small amount beats giving everything</strong>—this is the core philosophy of RAG, covered in detail in Chapter 3.</li>
+<li>Running /clear at the right moment, once you've wrapped up a stage of a task, often actually makes whatever comes next go more smoothly and finish faster.</li>
+</ol>
+<h2 id="14-temperature-the-knob-that-controls-randomness">1.4 Temperature: The Knob That Controls Randomness<a class="headerlink" href="#14-temperature-the-knob-that-controls-randomness" title="Permanent link">&para;</a></h2>
+<p>When the model predicts the next token, what it actually computes is a probability distribution ("的" 40%, "了" 20%, "呢" 5%…). <strong>Temperature</strong> controls how it picks from that distribution:</p>
+<ul>
+<li><strong>Low (0–0.3)</strong>: almost always picks the highest-probability option → stable, reproducible output. Used for: classification, extraction, code, enterprise workflows—<strong>95% of an FDE's day-to-day scenarios</strong>.</li>
+<li><strong>High (0.7 and up)</strong>: allows lower-probability options to be picked → diverse, creative, but unstable. Used for: copywriting ideation, brainstorming.</li>
+</ul>
+<blockquote>
+<p>Common misconception: temperature 0 does not mean "smarter" or "never wrong"—it only means "the same input gives the same output." A wrong answer will be wrong just as consistently.</p>
+</blockquote>
+<h2 id="15-streaming-and-latency">1.5 Streaming and Latency<a class="headerlink" href="#15-streaming-and-latency" title="Permanent link">&para;</a></h2>
+<p>The model generates token by token, so it can <strong>stream as it generates</strong> (streaming). The key user-experience metric is <strong>TTFT (time to first token)</strong>—how long the user waits before seeing the first character. An experience with a total generation time of 10 seconds but a TTFT of 0.5 seconds is far better than one that finishes in 5 seconds total but leaves the user staring at a blank screen for all 5.</p>
+<p>Latency-optimization checklist for enterprise scenarios: a smaller model → streaming → a leaner prompt → caching → parallelizing the upfront steps (such as retrieval).</p>
+<h2 id="16-the-cost-model-and-prompt-caching">1.6 The Cost Model and Prompt Caching<a class="headerlink" href="#16-the-cost-model-and-prompt-caching" title="Permanent link">&para;</a></h2>
+<p>API pricing: <strong>input tokens and output tokens are counted separately, and output costs several times more</strong>.</p>
+<p><strong>Prompt Caching</strong>: if the beginning of every request is identical (the same system prompt, the same batch of documents), the provider can cache that "already-read prefix" so it doesn't have to reprocess it next time—cost drops sharply and speed goes up. When you design a prompt, putting "the fixed, unchanging parts up front and the parts that change every time at the back" is precisely how you get to benefit from the cache.</p>
+<p>A master list of cost-optimization tactics (expanded further in Chapter 9):</p>
+<ol>
+<li>Model tiering—use a cheap small model for simple tasks, and only reach for the flagship on hard ones</li>
+<li>Prompt Caching—a fixed prefix</li>
+<li>Control output length—if you want JSON, don't let it write prose</li>
+<li>Batch API—run non-urgent work in batches, usually at half price</li>
+<li>Cache repeated questions—don't ask the same question twice</li>
+</ol>
+<h2 id="17-the-built-in-limitations-all-in-one-place">1.7 The Built-in Limitations, All in One Place<a class="headerlink" href="#17-the-built-in-limitations-all-in-one-place" title="Permanent link">&para;</a></h2>
+<p>When you're asked "What are the limitations of LLMs," answer with this structure, pairing every limitation with a countermeasure:</p>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Cause</th>
+<th>Engineering countermeasure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hallucination</strong></td>
+<td>the probabilistic nature of word-chaining; no verification</td>
+<td>RAG + citing sources + evals (AI's evaluation mechanism) + a human-review gate</td>
+</tr>
+<tr>
+<td><strong>Stale knowledge</strong></td>
+<td>training has a cutoff date</td>
+<td>RAG / tools (search, query a DB)</td>
+</tr>
+<tr>
+<td><strong>Can't actually do math</strong></td>
+<td>a language model isn't a calculator</td>
+<td>give it a calculation tool (tool use)</td>
+</tr>
+<tr>
+<td><strong>Limited window + loses focus in the middle</strong></td>
+<td>an architectural constraint</td>
+<td>retrieve curated content instead of force-feeding</td>
+</tr>
+<tr>
+<td><strong>Unstable output</strong></td>
+<td>probabilistic generation</td>
+<td>low temperature + Structured Output + validate-and-retry</td>
+</tr>
+<tr>
+<td><strong>Can't distinguish instructions from data</strong></td>
+<td>it's all just text</td>
+<td>a permission-layer defense (Chapter 8)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>In one line: "Every limitation of an LLM has a mature engineering countermeasure—so the bottleneck for enterprises adopting AI was never that the model isn't smart enough, but that the surrounding engineering isn't fully built out. This is exactly why FDEs exist."</p>
+</blockquote>
+<hr />
+<h2 id="common-misconceptions">Common Misconceptions<a class="headerlink" href="#common-misconceptions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>"The model looks things up online"</strong>—it doesn't, unless you explicitly give it a search tool. On its own, it only has the knowledge from when it was trained. (Editor's note: adding a Skill, such as claude-in-chrome, does let it look things up online—but it won't necessarily do so every time, so if you need it, it's best to say so in the Prompt.)</li>
+<li><strong>"It remembers what we talked about last time"</strong>—it doesn't. The application re-feeds the history. This also means: <strong>it knows whatever you feed it, and it doesn't know what you don't feed it</strong>—so the first thing to do when debugging an AI application is always "look at what it actually received." (Editor's note: even within the same Session, memory problems can arise because the Context gets too long and causes confusion.)</li>
+<li><strong>"It sounds so confident, it must be right"</strong>—a confident tone is a writing style, not an indicator of trustworthiness. The most dangerous thing about a hallucination is precisely how fluent and confident it is—this is what people mean by an AI that talks nonsense with a completely straight face.</li>
+<li><strong>"Just switch to a bigger model and it's solved"</strong>—a bigger model lowers the hallucination rate but doesn't zero it out; a system without RAG and evals is unreliable no matter which model you swap in.</li>
+</ol>
+<h2 id="self-check">Self-Check<a class="headerlink" href="#self-check" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Use a metaphor to explain to a completely non-technical customer "why AI states falsehoods with a straight face," and state your engineering countermeasure.</li>
+<li>A customer complains that "AI replies too slowly"—list your latency diagnosis and optimization order.</li>
+<li>What is prompt caching? How should you design a prompt to work with it?</li>
+<li>Why is "stuffing all your documents into the context" a bad idea? (Cover all three points: cost, window, lost in the middle.)</li>
+<li>Once you set temperature to 0, is the output guaranteed to be correct? Why?</li>
+</ol>
+<h2 id="key-points-for-the-reference-answers">Key Points for the Reference Answers<a class="headerlink" href="#key-points-for-the-reference-answers" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>1. The word-chaining machine / never-verifying consultant metaphor; countermeasure = RAG + citations + evals.
+2. Measure first (TTFT vs. total time) → streaming → model tiering → leaner prompt → caching → parallelize retrieval.
+3. The processing result of the fixed prefix gets cached; put fixed content up front and changing content at the back.
+4. Expensive (token-based billing), won&#39;t fit (window limit), and even if it fits it loses focus (lost in the middle); giving the right small amount beats giving everything.
+5. No guarantee. It only guarantees reproducibility—same input, same output; a wrong answer stays consistently wrong. Correctness is verified through evals.
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ch2-prompt-engineering/" class="md-footer__link md-footer__link--next" aria-label="Next: Ch2 Prompt Engineering">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Ch2 Prompt Engineering
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
