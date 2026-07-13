@@ -43,6 +43,7 @@ nav:
   - Ch8 安全: ch8-security.md
   - Ch9 企業部署: ch9-enterprise-deployment.md
   - Ch10 基礎設施複習: ch10-infra-basics.md
+  - 名詞速查表: glossary.md
 
 markdown_extensions:
   - admonition
