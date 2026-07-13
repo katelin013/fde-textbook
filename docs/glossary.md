@@ -104,9 +104,17 @@ FDE 必備 AI 術語一覽——英文全名、中文、一句話說明。依主
 | **Marketplace 市集**<br>讓外掛可被搜尋、安裝、更新的來源 | 有（`/plugin marketplace add …`） | 有（`gemini extensions install …`） | 無官方市集 |
 | **MCP 伺服器**<br>用統一協定讓 AI 連接外部工具與資料源 | 支援 | 支援 | 支援 |
 
-### 關於「rules.md／規則檔」
+### 規則要定義在哪？
 
-這三個 CLI **沒有**叫 `rules.md` 的統一檔案。「規則」這個概念，在各 CLI 就是上表的**專案指令檔**——`CLAUDE.md`、`GEMINI.md`、`AGENTS.md`。其中 **`AGENTS.md` 正逐漸成為跨工具的開放標準**：Codex CLI 原生讀它，Gemini CLI 也能在 `settings.json`（`context.fileName`）設定改讀 `AGENTS.md`。至於 `.cursor/rules`、`.windsurfrules` 這類「rules」檔，是 Cursor／Windsurf 等**編輯器型**工具的用法，不屬於這三個 CLI。
+要幫這三個 CLI 定專案規則（慣例、架構、風格、禁止事項），就寫進各自的**專案指令檔**——放在專案根目錄，每次對話都會自動讀入：
+
+- **Claude Code** → `CLAUDE.md`
+- **Gemini CLI** → `GEMINI.md`
+- **Codex CLI** → `AGENTS.md`
+
+三者也都支援放在家目錄（如 `~/.claude/CLAUDE.md`）當作跨專案的**全域規則**。其中 **`AGENTS.md` 正逐漸成為跨工具的開放標準**：Codex CLI 原生讀它，Gemini CLI 也能在 `settings.json`（`context.fileName`）設定改讀 `AGENTS.md`——想「寫一份規則餵多個工具」，優先選 `AGENTS.md`。
+
+（`.cursor/rules`、`.windsurfrules` 這類「rules」檔是 Cursor／Windsurf 等**編輯器型**工具的用法，跟上面三個 CLI 無關。）
 
 ---
 

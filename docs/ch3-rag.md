@@ -143,7 +143,7 @@ flowchart LR
 5. 使用者回報「AI 答錯了」——完整走一遍你的診斷流程。
 6. 權限控制應該做在哪一層？為什麼不能靠 prompt？
 
-??? note "參考答案要點"
+## 參考答案要點
 
     1. 見 3.2；每環節理由散見各節。
     2. 塞不下（視窗）、太貴（token 計費）、塞了也失焦（lost in the middle）。
@@ -151,7 +151,3 @@ flowchart LR
     4. 精確詞（型號/人名/編號）；上 hybrid（BM25＋向量）。
     5. 先看該內容有沒有被檢索到 → 有=生成問題（prompt/模型），沒有=檢索問題（hybrid/rerank/chunking/embedding）→ 對照 3.10 表。
     6. 檢索層（metadata 權限過濾）；模型無法區分指令與資料，prompt 層的「不要講」可被繞過——prompt 不是安全邊界。
-
-## 面試連結
-
-`interview/question-bank.md` 第七部分 #3（chunking 答辯）、第四部分 #1（VPC 內 RAG 設計）、第六部分 #3（向 VP 解釋不能 100% 準確）、coding 題 C7（徒手最小 RAG）。W3 實作驗收：為 Trilo 建 eval 的作業會用到 3.10 的診斷思維。
