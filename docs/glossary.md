@@ -107,3 +107,20 @@ FDE 必備 AI 術語一覽——英文全名、中文、一句話說明。依主
 ### 關於「rules.md／規則檔」
 
 這三個 CLI **沒有**叫 `rules.md` 的統一檔案。「規則」這個概念，在各 CLI 就是上表的**專案指令檔**——`CLAUDE.md`、`GEMINI.md`、`AGENTS.md`。其中 **`AGENTS.md` 正逐漸成為跨工具的開放標準**：Codex CLI 原生讀它，Gemini CLI 也能在 `settings.json`（`context.fileName`）設定改讀 `AGENTS.md`。至於 `.cursor/rules`、`.windsurfrules` 這類「rules」檔，是 Cursor／Windsurf 等**編輯器型**工具的用法，不屬於這三個 CLI。
+
+---
+
+## AI 工程範式演進：從 Prompt 到 Loop
+
+跟 AI 協作的「主要技能」這幾年一路往上抽象——瓶頸從「你說的字」→「你給的上下文」→「你寫的規格」→「你設計的迴圈」。四個階段是**累加**的，不是互相取代：loop engineering 裡面照樣用得到 prompt engineering。
+
+| 演進階段 | 年代 | 核心提問 | 一句話說明 |
+|---|---|---|---|
+| **Prompt Engineering**<br>提示工程 | ~2022–2024 | 「我該怎麼說，才能得到最好的一次輸出？」 | 雕琢單次指令：few-shot、CoT、角色扮演、XML 標籤。追求「一次輸入 → 一次最佳輸出」。 |
+| **Context Engineering**<br>情境工程 | 2025 | 「我該在上下文視窗裡放什麼？」 | 由 Karpathy 帶起：單一 prompt 不夠，要動態組裝整個 context——檢索文件、對話歷史、工具定義、RAG 結果。 |
+| **Spec-Driven Development**<br>規格驅動開發（SDD，又稱 Spec Engineering） | 2025 | 「我該寫出什麼規格，讓 agent 照著蓋？」 | 不再逐句下指令，而是先寫清楚規格書，交給 agent 實作（GitHub Spec Kit、AWS Kiro 是代表工具）。 |
+| **Loop Engineering**<br>循環工程（又稱 Harness Engineering） | 2026 | 「我該設計什麼系統，讓 agent 自己找事、做完、驗證、記住——不用我在迴圈裡？」 | 2026 年 6 月出現。重點從「寫 prompt」變成「設計驅動 agent 的迴圈」：生成端便宜地重複跑，真正的瓶頸在 verifier（驗證器）。 |
+
+> **給 FDE 的重點**：面試若被問「prompt engineering 會不會被淘汰」，正確框架是——它沒被淘汰，是被**包進**更上層的技能裡。能講出這條演進線（prompt → context → spec → loop）、並說明「瓶頸為何一路往上移」，就是在展現你跟得上、也想得清楚。
+
+*註：`spec engineer` 與 `sdd engineer` 其實是同一件事（SDD ＝ Spec-Driven Development），上表已合併；`context engineering` 是你原本清單漏掉、但很關鍵的一環，已補上。*
